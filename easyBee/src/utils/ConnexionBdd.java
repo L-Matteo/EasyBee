@@ -1,11 +1,15 @@
-package main;
+package utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
+// Singleton
 public class ConnexionBdd {
+	
+	private static ConnexionBdd instance;
 	Connection con;
-	public ConnexionBdd() {
+	
+	private ConnexionBdd() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con=DriverManager.getConnection("jdbc:mysql://localhost/easybee","user_easybee","mdp");
@@ -15,6 +19,18 @@ public class ConnexionBdd {
 			System.out.println(" ERREUR | Problème de connexion à la base de données : " + ex.getMessage());
 		}
 	}
+	
+	public static ConnexionBdd getInstance() {
+		if (instance == null) {
+            synchronized (ConnexionBdd.class) { // Synchronisation pour éviter les conflits en multi-threading
+                if (instance == null) {
+                    instance = new ConnexionBdd();
+                }
+            }
+        }
+		return instance;
+	}
+	
 	public Connection laconnexion() {
 		return con;
 	}

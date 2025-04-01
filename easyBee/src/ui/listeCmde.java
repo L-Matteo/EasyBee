@@ -1,4 +1,4 @@
-package main;
+package ui;
 
 import java.awt.EventQueue;
 import java.sql.ResultSet;
@@ -7,6 +7,10 @@ import java.sql.Statement;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import model.Utilisateur;
+import utils.ConnexionBdd;
+
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -20,7 +24,7 @@ public class listeCmde extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	Statement st;
-	ConnexionBdd cn=new ConnexionBdd(); 
+	ConnexionBdd cn = ConnexionBdd.getInstance(); 
 
 	public listeCmde(Utilisateur user) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -47,6 +51,8 @@ public class listeCmde extends JFrame {
 			System.out.println("Erreur");
 		}
 		
+		String cmdeSlectionne = (String)comboBoxListCmde.getSelectedItem();
+		
 		JButton btnRetour = new JButton("Retour");
 		btnRetour.setBackground(new Color(128, 128, 255));
 		btnRetour.addActionListener(new ActionListener() {
@@ -67,7 +73,7 @@ public class listeCmde extends JFrame {
 		JButton btnNewButton = new JButton("Suivant");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				detailsCmde cmde = new detailsCmde(user);
+				detailsCmde cmde = new detailsCmde(user, cmdeSlectionne);
 				cmde.setVisible(true);
 				dispose();
 			}

@@ -1,14 +1,22 @@
-package main;
+package ui;
 
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import model.Utilisateur;
+import utils.ConnexionBdd;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JTextField;
@@ -20,8 +28,10 @@ public class detailsCmde extends JFrame {
 	private JPanel contentPane;
 	private JTextField textFieldNomProduit;
 	private JTextField textFieldQtnProduit;
+	ConnexionBdd cn = ConnexionBdd.getInstance(); 
+	Statement st;
 
-	public detailsCmde(Utilisateur user) {
+	public detailsCmde(Utilisateur user, String cmdeSlectionne) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(450,250,373,300);
 		contentPane = new JPanel();
@@ -57,6 +67,26 @@ public class detailsCmde extends JFrame {
 		lblQntProduit.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblQntProduit.setBounds(194, 85, 126, 13);
 		contentPane.add(lblQntProduit);
+		
+		String requete = "select qtePrepa from detailcmd join cmdeapprodepot on idCmdeApproDepot = cmdeapprodepot.id where nomCommande = " + cmdeSlectionne;
+		try {			
+			st=cn.laconnexion().createStatement();
+			ResultSet rs = st.executeQuery(requete);
+			if(rs.next()){
+				String nomCommande = rs.getString("nomCommande");
+				int qte = rs.getInt("qtePrepa");
+				textFieldNomProduit.setText(nomCommande);
+				textFieldQtnProduit.setText(String.valueOf(qte));
+			} else {
+				JOptionPane.showMessageDialog(contentPane,"Impossible de récupérer la commande.","ERREUR",JOptionPane.ERROR_MESSAGE);
+				}
+		}catch (Exception ex) {
+		    ex.printStackTrace();
+		    JOptionPane.showMessageDialog(contentPane, 
+		        "Erreur : " + ex.getMessage(), 
+		        "ERREUR", 
+		        JOptionPane.ERROR_MESSAGE);
+		}
 		
 		textFieldQtnProduit = new JTextField();
 		textFieldQtnProduit.setBounds(194, 108, 96, 19);
