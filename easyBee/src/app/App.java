@@ -2,7 +2,7 @@ package app;
 
 import java.awt.EventQueue;
 
-import ui.pageConnexion;
+import ui.PageConnexion;
 
 public class App {
 	/**
@@ -12,7 +12,7 @@ public class App {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					pageConnexion frame = new pageConnexion();
+					PageConnexion frame = new PageConnexion();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

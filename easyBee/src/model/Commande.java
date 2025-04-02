@@ -3,16 +3,20 @@ package model;
 public class Commande {
 
 	private String nom;
+	private int qte;
 	private String statut;
 	private int roleUser; 
 	private String date;
 		
-	public Commande() {
-			
+	public Commande(String nom, int qte) {
+		this.nom = nom;
+		this.qte = qte;
 	}
 		
 	public String getNom() { return this.nom; }
 	public void setNom(String nom) { this.nom = nom; }
+	public int getQte() { return this.qte; }
+	public void setQte(int qte) { this.qte = qte; }
 	public String getStatut() { return this.statut; }
 	public void setStatut(String statut) { this.statut = statut; }
 	public int getRoleUser() { return this.roleUser; }
