@@ -5,32 +5,35 @@ import java.sql.DriverManager;
 
 // Singleton
 public class ConnexionBdd {
-	
+
 	private static ConnexionBdd instance;
 	Connection con;
-	
+
+	private String host = "localhost";
+	private String dbName = "easybee_projet2";
+	private String username = "easybee_projet2";
+	private String password = "(s@JOuAzT4Hxh7iP";
+
 	private ConnexionBdd() {
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			con=DriverManager.getConnection("jdbc:mysql://localhost/easybee","user_easybee","mdp");
+			con = DriverManager.getConnection("jdbc:mysql://" + host + "/" + dbName, username, password);
 			System.out.println("connexion reussie");
-		}
-		catch(Exception ex) {
+		} catch (Exception ex) {
 			System.out.println(" ERREUR | Problème de connexion à la base de données : " + ex.getMessage());
 		}
 	}
-	
+
 	public static ConnexionBdd getInstance() {
 		if (instance == null) {
-            synchronized (ConnexionBdd.class) { // Synchronisation pour éviter les conflits en multi-threading
-                if (instance == null) {
-                    instance = new ConnexionBdd();
-                }
-            }
-        }
+			synchronized (ConnexionBdd.class) { // Synchronisation pour éviter les conflits en multi-threading
+				if (instance == null) {
+					instance = new ConnexionBdd();
+				}
+			}
+		}
 		return instance;
 	}
-	
+
 	public Connection laconnexion() {
 		return con;
 	}
