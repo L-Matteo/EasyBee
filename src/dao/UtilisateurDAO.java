@@ -26,7 +26,7 @@ public class UtilisateurDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); 
         }
         return null;
 	}
