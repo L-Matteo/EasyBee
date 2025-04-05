@@ -1,6 +1,6 @@
 # 🐝EasyBee - Gestion d'approvisionnement en matériel apicole
 
-![Logo](logoEasybee.webp)
+![Logo](logoEasybee.png)
 
 
 ## 🌍Contexte
