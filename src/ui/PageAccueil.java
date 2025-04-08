@@ -40,7 +40,7 @@ public class PageAccueil extends JFrame {
 		btnCommande.setBounds(177, 168, 287, 21);
 		contentPane.add(btnCommande);
 		
-		JButton btnNewButton = new JButton("Liste des commandes");
+		JButton btnNewButton = new JButton("Préparation des commandes");
 		btnNewButton.setBackground(new Color(128, 128, 255));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -55,7 +55,7 @@ public class PageAccueil extends JFrame {
 				}
 			}
 		}); 
-		btnNewButton.setBounds(177, 207, 287, 21);
+		btnNewButton.setBounds(177, 231, 287, 21);
 		contentPane.add(btnNewButton);
 		
 		JLabel lblAccueil = new JLabel("Accueil");
@@ -79,5 +79,23 @@ public class PageAccueil extends JFrame {
 		btnDeco.setBackground(new Color(128, 128, 255));
 		btnDeco.setBounds(10, 322, 114, 21);
 		contentPane.add(btnDeco);
+		
+		JButton btnSuiviCmde = new JButton("Suivi des commandes");
+		btnSuiviCmde.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(user.getRole() == 1) {
+					PageSuiviCmde suiviCmde = new PageSuiviCmde();
+					suiviCmde.setVisible(true);
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(contentPane,"Vous n'avez pas le rôle nécessaire pour accéder à cette fonctionnalité",
+							"ERREUR", JOptionPane.ERROR_MESSAGE); 
+				}
+				
+			}
+		});
+		btnSuiviCmde.setBackground(new Color(128, 128, 255));
+		btnSuiviCmde.setBounds(177, 199, 287, 21);
+		contentPane.add(btnSuiviCmde);
 	}
 }

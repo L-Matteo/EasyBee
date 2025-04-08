@@ -8,9 +8,10 @@ public class Commande {
 	private int roleUser; 
 	private String date;
 		
-	public Commande(String nom, int qte) {
+	public Commande(String nom, int qte, String statut) {
 		this.nom = nom;
 		this.qte = qte;
+		this.statut = statut;
 	}
 		
 	public String getNom() { return this.nom; }

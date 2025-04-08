@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JTextField;
 import java.awt.Font;
+import javax.swing.JCheckBox;
 
 public class DetailsCmde extends JFrame {
 
@@ -46,25 +47,31 @@ public class DetailsCmde extends JFrame {
 		contentPane.setLayout(null);
 		contentPane.add(btnNewButton);
 		
-		JLabel lblNomProduit = new JLabel("Nom : ");
+		JLabel lblNomProduit = new JLabel("Produit : ");
 		lblNomProduit.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNomProduit.setBounds(192, 114, 112, 13);
+		lblNomProduit.setBounds(192, 104, 112, 13);
 		contentPane.add(lblNomProduit);
 		
 		textFieldNomProduit = new JTextField();
-		textFieldNomProduit.setBounds(192, 137, 247, 19);
+		textFieldNomProduit.setEditable(false);
+		textFieldNomProduit.setBounds(192, 126, 247, 19);
 		contentPane.add(textFieldNomProduit);
 		textFieldNomProduit.setColumns(10);
 		
 		JLabel lblQntProduit = new JLabel("Quantité :");
 		lblQntProduit.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblQntProduit.setBounds(192, 166, 126, 13);
+		lblQntProduit.setBounds(190, 153, 126, 13);
 		contentPane.add(lblQntProduit);
 		
 		textFieldQtnProduit = new JTextField();
-		textFieldQtnProduit.setBounds(194, 189, 245, 19);
+		textFieldQtnProduit.setEditable(false);
+		textFieldQtnProduit.setBounds(192, 176, 245, 19);
 		contentPane.add(textFieldQtnProduit);
 		textFieldQtnProduit.setColumns(10);
+		
+		JCheckBox chckbxStatus = new JCheckBox("Préparation de la commande terminée");
+		chckbxStatus.setBounds(190, 212, 249, 21);
+		contentPane.add(chckbxStatus);
 		
 		CommandeDAO cmdeDAO = new CommandeDAO();
 		Commande commande = cmdeDAO.afficherDetailsCmdeSelectione(cmdeSlectionne);
@@ -74,6 +81,9 @@ public class DetailsCmde extends JFrame {
 			textFieldQtnProduit.setText(String.valueOf(commande.getQte()));
 		} else {
 			JOptionPane.showMessageDialog(this, "Impossible de trouver la commande", "ERREUR", JOptionPane.ERROR_MESSAGE);
+			ListeCmde listeCmde = new ListeCmde(user);
+			listeCmde.setVisible(true);
+			dispose();
 		}
 
 		JLabel lblDetails = new JLabel("Détails de la commande");
@@ -82,8 +92,20 @@ public class DetailsCmde extends JFrame {
 		contentPane.add(lblDetails);
 		
 		JButton btnTerminer = new JButton("Terminer");
+		btnTerminer.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(chckbxStatus.isSelected()) {
+					cmdeDAO.changerStatutCommande(cmdeSlectionne, "en cours de livraison");
+					ListeCmde listeCmde = new ListeCmde(user);
+					listeCmde.setVisible(true);
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(contentPane, "La commande est toujours en cours de préparation", "Erreur", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 		btnTerminer.setBackground(new Color(128, 128, 255));
-		btnTerminer.setBounds(194, 235, 245, 21);
+		btnTerminer.setBounds(192, 256, 245, 21);
 		contentPane.add(btnTerminer);
 		
 	}

@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import dao.CommandeDAO;
+import model.Commande;
 import model.Utilisateur;
 
 import javax.swing.JComboBox;
@@ -35,11 +36,13 @@ public class ListeCmde extends JFrame {
 		comboBoxListCmde.setBounds(189, 152, 255, 21);
 		contentPane.add(comboBoxListCmde);
 		
-		CommandeDAO commandeDAO = new CommandeDAO();
-        List<String> commandes = commandeDAO.listeCommandeEnAttente();
+		comboBoxListCmde.addItem("");
 		
-		for(String commande : commandes) {
-			comboBoxListCmde.addItem(commande);
+		CommandeDAO commandeDAO = new CommandeDAO();
+        List<Commande> commandes = commandeDAO.listeCommandeEnAttente();
+		
+		for(Commande commande : commandes) {
+			comboBoxListCmde.addItem(commande.getNom());
 		}
 		
 		JLabel lblSelectCdm = new JLabel("Sélectionner la commande à préparer");
