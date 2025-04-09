@@ -29,6 +29,8 @@ public class DetailsCmde extends JFrame {
 		setBounds(370,250,660,390);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setResizable(false);
+		setTitle("Détails de la commande en attente - Gestion des stocks");
 
 		setContentPane(contentPane);
 		
@@ -74,6 +76,10 @@ public class DetailsCmde extends JFrame {
 			textFieldQtnProduit.setText(String.valueOf(commande.getQte()));
 		} else {
 			JOptionPane.showMessageDialog(this, "Impossible de trouver la commande", "ERREUR", JOptionPane.ERROR_MESSAGE);
+			ListeCmde listeCmde = new ListeCmde(user);
+			listeCmde.setVisible(true);
+			dispose();
+			return;
 		}
 
 		JLabel lblDetails = new JLabel("Détails de la commande");

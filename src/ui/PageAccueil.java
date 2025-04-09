@@ -22,11 +22,11 @@ public class PageAccueil extends JFrame {
 	public PageAccueil(Utilisateur user) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(370, 250, 660, 390);
-		setTitle("Page d'accueil");
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
+		setResizable(false);
+		setTitle("Accueil - Gestion des stocks");
+		
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 

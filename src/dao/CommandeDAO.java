@@ -46,7 +46,7 @@ public class CommandeDAO {
 
 	public Commande afficherDetailsCmdeSelectione(String cmdeSelectionne) {
 
-		String query = "select nomCommande, qtePrepa from detailcmd join cmdeapprodepot on idCmdeApproDepot = cmdeapprodepot.id where nomCommande = ?";
+		String query = "SELECT nomCommande, qtePrepa FROM detailcmd JOIN cmdeapprodepot on idCmdeApproDepot = cmdeapprodepot.id WHERE nomCommande = ?";
 
 		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)) {
 			stmt.setString(1, cmdeSelectionne);

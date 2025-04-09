@@ -28,6 +28,8 @@ public class PasserCmde extends JFrame {
 		setBounds(370, 250, 660, 390);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setResizable(false);
+		setTitle("Passer une commande d'approvisionnement - Gestion des stocks");
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -78,8 +80,10 @@ public class PasserCmde extends JFrame {
 		JButton validBtn = new JButton("Valider");
 		validBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String produitSelectionne = (String) produitCB.getSelectedItem();
+				String selectedProduit = (String) produitCB.getSelectedItem();
 				int quantiteChoisi = Integer.parseInt(quantityTF.getText());
+
+				int quantiteEntrepot = produitDAO.getQuantiteByNomProduit(selectedProduit);
 
 				if (produits.isEmpty()) {
 					JOptionPane.showMessageDialog(contentPane, "Aucun produit n'a besoin d'être réapprovisionné.",
@@ -87,7 +91,7 @@ public class PasserCmde extends JFrame {
 					return;
 				}
 
-				if (produitSelectionne == null || produitSelectionne.equals("Sélectionnez un produit")) {
+				if (selectedProduit == null || selectedProduit.equals("Sélectionnez un produit")) {
 					JOptionPane.showMessageDialog(contentPane, "Veuillez choisir un produit.", "Erreur",
 							JOptionPane.ERROR_MESSAGE);
 					return;
@@ -99,20 +103,30 @@ public class PasserCmde extends JFrame {
 					return;
 				}
 
+				if (quantiteChoisi > quantiteEntrepot) {
+					JOptionPane.showMessageDialog(contentPane,
+							"La quantité demandée est supérieure au stock disponible. Veuillez ajuster votre saisie.",
+							"Erreur", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
 				ProduitDAO produitDAO = new ProduitDAO();
-				boolean isCommandeCreated = produitDAO.createCommande("en attente", user.getRole(), produitSelectionne,
+				boolean isCommandeCreated = produitDAO.createCommande("en attente", user.getRole(), selectedProduit,
 						quantiteChoisi);
 
 				if (isCommandeCreated) {
 					JOptionPane.showMessageDialog(contentPane, "Commande effectuée, en attente de confirmation",
 							"Information", JOptionPane.INFORMATION_MESSAGE);
+					PageAccueil accueil = new PageAccueil(user);
+					accueil.setVisible(true);
+					dispose();
 				} else {
 					JOptionPane.showMessageDialog(contentPane,
 							"Une erreur s'est produite lors de la création de la commande.", "Erreur",
 							JOptionPane.ERROR_MESSAGE);
 				}
 
-				System.out.println("Produit : " + produitSelectionne + " Quantité : " + quantiteChoisi);
+				System.out.println("Produit : " + selectedProduit + " Quantité : " + quantiteChoisi);
 			}
 		});
 		validBtn.setBackground(new Color(128, 128, 255));

@@ -26,21 +26,17 @@ public class ProduitDAO {
 			}
 
 			int idProduit = produit.getIdProduit();
-			System.out.println("ID produit récupéré : " + produit.getIdProduit());
 
-			// Préparation de la commande (en générant l'ID automatiquement)
 			PreparedStatement stmt1 = cn.laconnexion().prepareStatement(query1, Statement.RETURN_GENERATED_KEYS);
 			stmt1.setString(1, statut);
 			stmt1.setInt(2, roleUser);
 			stmt1.setString(3, nomProduit);
 			stmt1.executeUpdate();
 
-			// Récupération de la clé générée (idCmdeApproDepot)
 			ResultSet generatedKeys = stmt1.getGeneratedKeys();
 			if (generatedKeys.next()) {
 				int idCmdeApproDepot = generatedKeys.getInt(1);
 
-				// Insertion du détail de produit
 				PreparedStatement stmt2 = cn.laconnexion().prepareStatement(query2);
 				stmt2.setInt(1, idProduit);
 				stmt2.setInt(2, idCmdeApproDepot);

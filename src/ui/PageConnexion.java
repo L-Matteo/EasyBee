@@ -21,18 +21,14 @@ public class PageConnexion extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textFieldLogin;
-	private JPasswordField passwordField;
 
 	public PageConnexion() {
-
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(370, 250, 660, 390);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setTitle("Connexion");
 		setResizable(false);
+		setTitle("Connexion - Gestion des stocks");
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -42,7 +38,7 @@ public class PageConnexion extends JFrame {
 		lblLogin.setBounds(160, 94, 117, 20);
 		contentPane.add(lblLogin);
 
-		textFieldLogin = new JTextField();
+		JTextField textFieldLogin = new JTextField();
 		textFieldLogin.setBounds(160, 127, 319, 19);
 		contentPane.add(textFieldLogin);
 		textFieldLogin.setColumns(10);
@@ -52,7 +48,7 @@ public class PageConnexion extends JFrame {
 		lblPassword.setBounds(160, 156, 134, 13);
 		contentPane.add(lblPassword);
 
-		passwordField = new JPasswordField();
+		JPasswordField passwordField = new JPasswordField();
 		passwordField.setBounds(160, 179, 319, 19);
 		contentPane.add(passwordField);
 

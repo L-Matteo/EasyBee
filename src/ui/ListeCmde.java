@@ -26,6 +26,8 @@ public class ListeCmde extends JFrame {
 		setBounds(370, 250, 660, 390);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setResizable(false);
+		setTitle("Liste des commandes en attente - Gestion des stocks");
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
