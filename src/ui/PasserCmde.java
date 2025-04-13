@@ -12,9 +12,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
+import dao.CommandeDAO;
 import dao.ProduitDAO;
 import model.Utilisateur;
 
@@ -36,11 +40,11 @@ public class PasserCmde extends JFrame {
 
 		JLabel lblNomDuProduit = new JLabel("Nom du produit :");
 		lblNomDuProduit.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNomDuProduit.setBounds(190, 52, 105, 13);
+		lblNomDuProduit.setBounds(24, 40, 105, 13);
 		contentPane.add(lblNomDuProduit);
 
 		JComboBox<String> produitCB = new JComboBox<String>();
-		produitCB.setBounds(190, 72, 255, 22);
+		produitCB.setBounds(24, 60, 255, 22);
 		contentPane.add(produitCB);
 
 		ProduitDAO produitDAO = new ProduitDAO();
@@ -53,18 +57,18 @@ public class PasserCmde extends JFrame {
 
 		JLabel lblQntProduit = new JLabel("Quantité  :");
 		lblQntProduit.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblQntProduit.setBounds(190, 148, 74, 13);
+		lblQntProduit.setBounds(24, 113, 74, 13);
 		contentPane.add(lblQntProduit);
 
 		JTextField quantityTF = new JTextField();
-		quantityTF.setBounds(190, 166, 255, 22);
+		quantityTF.setBounds(24, 131, 255, 22);
 		quantityTF.setText("0");
 		contentPane.add(quantityTF);
 		quantityTF.setColumns(10);
 
 		JLabel lblQntProduitEntrepot = new JLabel("Stock Entrepot :");
 		lblQntProduitEntrepot.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblQntProduitEntrepot.setBounds(190, 188, 255, 13);
+		lblQntProduitEntrepot.setBounds(24, 153, 255, 13);
 		contentPane.add(lblQntProduitEntrepot);
 
 		produitCB.addActionListener(new ActionListener() {
@@ -77,64 +81,133 @@ public class PasserCmde extends JFrame {
 			}
 		});
 
-		JButton validBtn = new JButton("Valider");
-		validBtn.addActionListener(new ActionListener() {
+		DefaultTableModel tableModel = new DefaultTableModel(new Object[] { "Produit", "Quantité" }, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false; // 🔒 Aucune cellule n'est modifiable
+			}
+		};
+		JTable tableProduits = new JTable(tableModel);
+
+		JButton btnAjouterProduit = new JButton("Ajouter à la commande");
+		btnAjouterProduit.setBackground(new Color(46, 204, 113));
+		btnAjouterProduit.setForeground(Color.WHITE);
+		btnAjouterProduit.setBounds(24, 177, 255, 22);
+		contentPane.add(btnAjouterProduit);
+
+		btnAjouterProduit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String selectedProduit = (String) produitCB.getSelectedItem();
-				int quantiteChoisi = Integer.parseInt(quantityTF.getText());
-
-				int quantiteEntrepot = produitDAO.getQuantiteByNomProduit(selectedProduit);
-
-				if (produits.isEmpty()) {
-					JOptionPane.showMessageDialog(contentPane, "Aucun produit n'a besoin d'être réapprovisionné.",
-							"Information", JOptionPane.INFORMATION_MESSAGE);
-					return;
-				}
-
 				if (selectedProduit == null || selectedProduit.equals("Sélectionnez un produit")) {
 					JOptionPane.showMessageDialog(contentPane, "Veuillez choisir un produit.", "Erreur",
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 
-				if (quantiteChoisi == 0) {
-					JOptionPane.showMessageDialog(contentPane, "Veuillez saisir une quantité.", "Erreur",
+				for (int i = 0; i < tableModel.getRowCount(); i++) {
+					String produitExistant = (String) tableModel.getValueAt(i, 0);
+					if (produitExistant.equals(selectedProduit)) {
+						JOptionPane.showMessageDialog(contentPane, "Ce produit a déjà été ajouté à la commande.",
+								"Erreur", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+				}
+
+				int quantiteChoisi;
+				try {
+					quantiteChoisi = Integer.parseInt(quantityTF.getText());
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(contentPane, "Quantité invalide.", "Erreur",
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 
+				if (quantiteChoisi <= 0) {
+					JOptionPane.showMessageDialog(contentPane, "Veuillez saisir une quantité supérieure à 0.", "Erreur",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
+				int quantiteEntrepot = produitDAO.getQuantiteByNomProduit(selectedProduit);
 				if (quantiteChoisi > quantiteEntrepot) {
 					JOptionPane.showMessageDialog(contentPane,
-							"La quantité demandée est supérieure au stock disponible. Veuillez ajuster votre saisie.",
-							"Erreur", JOptionPane.ERROR_MESSAGE);
+							"La quantité demandée est supérieure au stock disponible.", "Erreur",
+							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 
-				ProduitDAO produitDAO = new ProduitDAO();
-				boolean isCommandeCreated = produitDAO.createCommande("en attente", user.getRole(), selectedProduit,
-						quantiteChoisi);
-
-				if (isCommandeCreated) {
-					JOptionPane.showMessageDialog(contentPane, "Commande effectuée, en attente de confirmation",
-							"Information", JOptionPane.INFORMATION_MESSAGE);
-					PageAccueil accueil = new PageAccueil(user);
-					accueil.setVisible(true);
-					dispose();
-				} else {
-					JOptionPane.showMessageDialog(contentPane,
-							"Une erreur s'est produite lors de la création de la commande.", "Erreur",
-							JOptionPane.ERROR_MESSAGE);
-				}
-
-				System.out.println("Produit : " + selectedProduit + " Quantité : " + quantiteChoisi);
+				tableModel.addRow(new Object[] { selectedProduit, quantiteChoisi });
 			}
 		});
-		validBtn.setBackground(new Color(128, 128, 255));
-		validBtn.setBounds(190, 258, 255, 22);
+
+		JButton btnSupprimerProduit = new JButton("Supprimer le produit sélectionné");
+		btnSupprimerProduit.setBackground(new Color(231, 76, 60));
+		btnSupprimerProduit.setForeground(Color.WHITE);
+		btnSupprimerProduit.setBounds(360, 177, 255, 22);
+		contentPane.add(btnSupprimerProduit);
+
+		btnSupprimerProduit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = tableProduits.getSelectedRow();
+				if (selectedRow != -1) {
+					tableModel.removeRow(selectedRow);
+				} else {
+					JOptionPane.showMessageDialog(contentPane, "Veuillez sélectionner un produit à supprimer.",
+							"Information", JOptionPane.INFORMATION_MESSAGE);
+				}
+			}
+		});
+
+		JScrollPane scrollPane = new JScrollPane(tableProduits);
+		scrollPane.setBounds(360, 40, 255, 126);
+		contentPane.add(scrollPane);
+
+		JButton validBtn = new JButton("Valider la commande");
+		validBtn.setBackground(new Color(46, 204, 113));
+		validBtn.setForeground(Color.WHITE);
+		validBtn.setBounds(183, 282, 255, 22);
 		contentPane.add(validBtn);
 
+		validBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (tableModel.getRowCount() == 0) {
+					JOptionPane.showMessageDialog(contentPane, "Veuillez ajouter au moins un produit.", "Erreur",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+
+				CommandeDAO cmdeDAO = new CommandeDAO();
+				boolean success = true;
+
+				for (int i = 0; i < tableModel.getRowCount(); i++) {
+					String produit = (String) tableModel.getValueAt(i, 0);
+					int quantite = (int) tableModel.getValueAt(i, 1);
+
+					boolean created = cmdeDAO.createCommande(user.getRole(), produit, quantite);
+					if (!created) {
+						success = false;
+						break;
+					}
+				}
+
+				if (success) {
+					JOptionPane.showMessageDialog(contentPane, "Commandes enregistrées avec succès.", "Information",
+							JOptionPane.INFORMATION_MESSAGE);
+					new PageAccueil(user).setVisible(true);
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(contentPane, "Une erreur s'est produite.", "Erreur",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+
 		JButton btnRetour = new JButton("Retour");
-		btnRetour.setBackground(new Color(128, 128, 255));
+		btnRetour.setBackground(new Color(52, 152, 219));
+		btnRetour.setForeground(Color.WHITE);
+		btnRetour.setBounds(10, 322, 85, 21);
+		contentPane.add(btnRetour);
+
 		btnRetour.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PageAccueil accueil = new PageAccueil(user);
@@ -142,8 +215,6 @@ public class PasserCmde extends JFrame {
 				dispose();
 			}
 		});
-		btnRetour.setBounds(10, 322, 85, 21);
-		contentPane.add(btnRetour);
 
 	}
 }

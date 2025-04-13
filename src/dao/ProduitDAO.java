@@ -3,7 +3,6 @@ package dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,46 +12,6 @@ import utils.ConnexionBdd;
 public class ProduitDAO {
 
 	ConnexionBdd cn = ConnexionBdd.getInstance();
-
-	public boolean createCommande(String statut, int roleUser, String nomProduit, int quantity) {
-		String query1 = "INSERT INTO cmdeapprodepot (statutCommande, idCatSalarie, nomCommande) VALUES (?, ?, ?)";
-		String query2 = "INSERT INTO detailproduit (idProduit, idCmdeApproDepot, qteCmde) VALUES (?, ?, ?)";
-
-		try {
-			Produit produit = this.getProduitByNom(nomProduit);
-			if (produit == null) {
-				System.out.println("Produit introuvable : " + nomProduit);
-				return false;
-			}
-
-			int idProduit = produit.getIdProduit();
-
-			PreparedStatement stmt1 = cn.laconnexion().prepareStatement(query1, Statement.RETURN_GENERATED_KEYS);
-			stmt1.setString(1, statut);
-			stmt1.setInt(2, roleUser);
-			stmt1.setString(3, nomProduit);
-			stmt1.executeUpdate();
-
-			ResultSet generatedKeys = stmt1.getGeneratedKeys();
-			if (generatedKeys.next()) {
-				int idCmdeApproDepot = generatedKeys.getInt(1);
-
-				PreparedStatement stmt2 = cn.laconnexion().prepareStatement(query2);
-				stmt2.setInt(1, idProduit);
-				stmt2.setInt(2, idCmdeApproDepot);
-				stmt2.setInt(3, quantity);
-				stmt2.executeUpdate();
-
-				return true;
-			} else {
-				System.out.println("Échec de la récupération de l'ID de la commande.");
-				return false;
-			}
-		} catch (SQLException e) {
-			System.out.println("Erreur lors de la création de la commande : " + e.getMessage());
-			return false;
-		}
-	}
 
 	public List<String> getProduitStoreStockBelowMinimum() {
 

@@ -3,30 +3,58 @@ package dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import model.Commande;
+import model.Produit;
 import utils.ConnexionBdd;
 
 public class CommandeDAO {
 
 	ConnexionBdd cn = ConnexionBdd.getInstance();
 
-	public void createCommande(String date, String statut, int roleUser, String nom) {
-		String query = "insert into cmdeapprodepot(dateCommande, statutCommande, idCatSalarie, nomCommande) values(?,?,?,?)";
+	public boolean createCommande(int roleUser, String nomProduit, int quantity) {
+		String query1 = "INSERT INTO cmdeapprodepot (idCatSalarie, nomCommande) VALUES (?, ?)";
+		String query2 = "INSERT INTO detailproduit (idProduit, idCmdeApproDepot, qteCmde) VALUES (?, ?, ?)";
 
-		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)) {
-			stmt.setString(1, date);
-			stmt.setString(2, statut);
-			stmt.setInt(3, roleUser);
-			stmt.setString(4, nom);
-			stmt.executeUpdate();
-			System.out.println("Commande ajouté avec succès");
+		ProduitDAO produitDAO = new ProduitDAO();
+
+		try {
+			Produit produit = produitDAO.getProduitByNom(nomProduit);
+			if (produit == null) {
+				System.out.println("Produit introuvable : " + nomProduit);
+				return false;
+			}
+
+			int idProduit = produit.getIdProduit();
+
+			PreparedStatement stmt1 = cn.laconnexion().prepareStatement(query1, Statement.RETURN_GENERATED_KEYS);
+			stmt1.setInt(1, roleUser);
+			stmt1.setString(2, nomProduit);
+			stmt1.executeUpdate();
+
+			ResultSet generatedKeys = stmt1.getGeneratedKeys();
+			if (generatedKeys.next()) {
+				int idCmdeApproDepot = generatedKeys.getInt(1);
+
+				PreparedStatement stmt2 = cn.laconnexion().prepareStatement(query2);
+				stmt2.setInt(1, idProduit);
+				stmt2.setInt(2, idCmdeApproDepot);
+				stmt2.setInt(3, quantity);
+				stmt2.executeUpdate();
+
+				return true;
+			} else {
+				System.out.println("Échec de la récupération de l'ID de la commande.");
+				return false;
+			}
 		} catch (SQLException e) {
-			System.out.println("Erreur lors de l'insertion de la commande : " + e.getMessage());
+			System.out.println("Erreur lors de la création de la commande : " + e.getMessage());
+			return false;
 		}
 	}
 
