@@ -7,8 +7,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import model.Commande;
 import model.Produit;
 import utils.ConnexionBdd;
@@ -61,11 +59,11 @@ public class CommandeDAO {
 	public List<Commande> listeCommandeEnAttente() {
 		List<Commande> cmdesEnAttente = new ArrayList<>();
 
-		String query = "Select nomCommande from cmdeapprodepot where statutCommande like '%en attente%'";
+		String query = "SELECT nomCommande FROM cmdeapprodepot WHERE statutCommande LIKE '%en attente%'";
 
 		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
 			while (rs.next()) {
-				Commande uneCmdeEnAttente = new Commande(rs.getString("nomCommande"), 0, "");
+				Commande uneCmdeEnAttente = new Commande(rs.getString("nomCommande"), 0, "en attente");
 				cmdesEnAttente.add(uneCmdeEnAttente);
 			}
 		} catch (SQLException e) {
@@ -74,14 +72,80 @@ public class CommandeDAO {
 		return cmdesEnAttente;
 	}
 
+	public boolean saveDetailsCmde(Commande cmde, int qtePrepa) {
+		String query = "INSERT INTO detailcmd (idProduit, idBonLivraison, qtePrepa, idCmdeApproDepot) VALUES (?, ?, ?, ?)";
+
+		ProduitDAO produitDAO = new ProduitDAO();
+		Produit produit = produitDAO.getProduitByNom(cmde.getNom());
+		if (produit == null) {
+			System.out.println("Produit introuvable : " + cmde.getNom());
+			return false;
+		}
+
+		int idProduit = produit.getIdProduit();
+		int idCmdeApproDepot = this.getCmdeIdByNom(cmde.getNom());
+		int idBonLivraison = createBonLivraisonIfNeeded();
+
+		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)) {
+			stmt.setInt(1, idProduit);
+			stmt.setInt(2, idBonLivraison);
+			stmt.setInt(3, qtePrepa);
+			stmt.setInt(4, idCmdeApproDepot);
+
+			int rowUpdated = stmt.executeUpdate();
+			if (rowUpdated > 0) {
+				this.changerStatutCommande(cmde.getNom(), "en cours de livraison");
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	private int createBonLivraisonIfNeeded() {
+		String query = "INSERT INTO bonlivraison (dateLivraison) VALUES (CURRENT_TIMESTAMP)";
+		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+			int rowInserted = stmt.executeUpdate();
+			if (rowInserted > 0) {
+				try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+					if (generatedKeys.next()) {
+						return generatedKeys.getInt(1);
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
+	public int getCmdeIdByNom(String nomCommande) {
+
+		String query = "SELECT id FROM cmdeapprodepot WHERE nomCommande = ?";
+
+		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)) {
+			stmt.setString(1, nomCommande);
+			try (ResultSet rs = stmt.executeQuery()) {
+				if (rs.next()) {
+					return rs.getInt("id");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
 	public Commande afficherDetailsCmdeSelectione(String cmdeSelectionne) {
-		String query = "select nomCommande, qtePrepa from detailcmd join cmdeapprodepot on idCmdeApproDepot = cmdeapprodepot.id where nomCommande = ?";
+		String query = "SELECT nomCommande, statutCommande, qteCmde FROM detailproduit JOIN cmdeapprodepot ON idCmdeApproDepot = cmdeapprodepot.id WHERE nomCommande = ?";
 
 		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)) {
 			stmt.setString(1, cmdeSelectionne);
 			try (ResultSet rs = stmt.executeQuery()) {
 				if (rs.next()) {
-					return new Commande(rs.getString("nomCommande"), rs.getInt("qtePrepa"), "");
+					return new Commande(rs.getString("nomCommande"), rs.getInt("qteCmde"),
+							rs.getString("statutCommande"));
 				}
 			}
 		} catch (SQLException e) {
@@ -90,8 +154,8 @@ public class CommandeDAO {
 		return null;
 	}
 
-	public void changerStatutCommande(String nomCommande, String newStatut) {
-		String query = "update cmdeapprodepot set statutCommande = ? where nomCommande = ?";
+	public boolean changerStatutCommande(String nomCommande, String newStatut) {
+		String query = "UPDATE cmdeapprodepot SET statutCommande = ? WHERE nomCommande = ?";
 
 		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)) {
 			stmt.setString(1, newStatut);
@@ -99,17 +163,18 @@ public class CommandeDAO {
 
 			int rowUpdated = stmt.executeUpdate();
 			if (rowUpdated > 0) {
-				JOptionPane.showMessageDialog(null, "Vous avez finis de préparer la commande", "Succès", 0);
+				return true;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 
 	public List<Commande> listeCommandeEnCoursDeLivraison() {
 		List<Commande> lesCommandesEnCoursDeLivraison = new ArrayList<>();
 
-		String query = "Select nomCommande, statutCommande from cmdeapprodepot where statutCommande like '%en cours de livraison%'";
+		String query = "SELECT nomCommande, statutCommande FROM cmdeapprodepot WHERE statutCommande LIKE '%en cours de livraison%'";
 
 		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
 			while (rs.next()) {

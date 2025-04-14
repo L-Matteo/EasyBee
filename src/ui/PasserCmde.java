@@ -1,11 +1,17 @@
 package ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -15,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -28,193 +35,200 @@ public class PasserCmde extends JFrame {
 	private JPanel contentPane;
 
 	public PasserCmde(Utilisateur user) {
+		setTitle("Passer une commande - Gestion des stocks");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(370, 250, 660, 390);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setBounds(370, 250, 700, 450);
 		setResizable(false);
-		setTitle("Passer une commande d'approvisionnement - Gestion des stocks");
 
+		contentPane = new JPanel(new BorderLayout());
+		contentPane.setBorder(new EmptyBorder(20, 20, 20, 20));
+		contentPane.setBackground(new Color(245, 250, 255));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
 
-		JLabel lblNomDuProduit = new JLabel("Nom du produit :");
-		lblNomDuProduit.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNomDuProduit.setBounds(24, 40, 105, 13);
-		contentPane.add(lblNomDuProduit);
+		// === Titre principal ===
+		JLabel titre = new JLabel("Nouvelle commande d'approvisionnement");
+		titre.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		titre.setHorizontalAlignment(SwingConstants.CENTER);
+		titre.setForeground(new Color(44, 62, 80));
+		contentPane.add(titre, BorderLayout.NORTH);
 
-		JComboBox<String> produitCB = new JComboBox<String>();
-		produitCB.setBounds(24, 60, 255, 22);
-		contentPane.add(produitCB);
+		// === Zone centrale ===
+		JPanel centerPanel = new JPanel(new GridBagLayout());
+		centerPanel.setOpaque(false);
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(10, 10, 5, 10);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		contentPane.add(centerPanel, BorderLayout.CENTER);
 
-		ProduitDAO produitDAO = new ProduitDAO();
-		List<String> produits = produitDAO.getProduitStoreStockBelowMinimum();
-		produitCB.addItem("Sélectionnez un produit");
+		// === Formulaire gauche ===
+		JLabel lblProduit = new JLabel("Nom du produit :");
+		lblProduit.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		centerPanel.add(lblProduit, gbc);
 
-		for (String pdt : produits) {
-			produitCB.addItem(pdt);
-		}
+		JComboBox<String> produitCB = new JComboBox<>();
+		produitCB.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+		gbc.gridy++;
+		centerPanel.add(produitCB, gbc);
 
-		JLabel lblQntProduit = new JLabel("Quantité  :");
-		lblQntProduit.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblQntProduit.setBounds(24, 113, 74, 13);
-		contentPane.add(lblQntProduit);
+		JLabel lblQuantite = new JLabel("Quantité :");
+		lblQuantite.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		gbc.gridy++;
+		centerPanel.add(lblQuantite, gbc);
 
-		JTextField quantityTF = new JTextField();
-		quantityTF.setBounds(24, 131, 255, 22);
-		quantityTF.setText("0");
-		contentPane.add(quantityTF);
-		quantityTF.setColumns(10);
+		JTextField quantityTF = new JTextField("0");
+		gbc.gridy++;
+		centerPanel.add(quantityTF, gbc);
 
-		JLabel lblQntProduitEntrepot = new JLabel("Stock Entrepot :");
-		lblQntProduitEntrepot.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblQntProduitEntrepot.setBounds(24, 153, 255, 13);
-		contentPane.add(lblQntProduitEntrepot);
+		JLabel lblStock = new JLabel("Stock Entrepôt : -");
+		lblStock.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		gbc.gridy++;
+		centerPanel.add(lblStock, gbc);
 
-		produitCB.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String selectedProduit = (String) produitCB.getSelectedItem();
-				if (selectedProduit != null) {
-					int quantite = produitDAO.getQuantiteByNomProduit(selectedProduit);
-					lblQntProduitEntrepot.setText(String.format("Stock Entrepôt : %d", quantite));
-				}
-			}
-		});
+		JButton btnAjouter = createStyledButton("Ajouter à la commande", new Color(46, 204, 113));
+		gbc.gridy++;
+		centerPanel.add(btnAjouter, gbc);
 
+		// === Tableau des produits à droite ===
 		DefaultTableModel tableModel = new DefaultTableModel(new Object[] { "Produit", "Quantité" }, 0) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false; // 🔒 Aucune cellule n'est modifiable
+			public boolean isCellEditable(int row, int col) {
+				return false;
 			}
 		};
-		JTable tableProduits = new JTable(tableModel);
 
-		JButton btnAjouterProduit = new JButton("Ajouter à la commande");
-		btnAjouterProduit.setBackground(new Color(46, 204, 113));
-		btnAjouterProduit.setForeground(Color.WHITE);
-		btnAjouterProduit.setBounds(24, 177, 255, 22);
-		contentPane.add(btnAjouterProduit);
+		JTable table = new JTable(tableModel);
+		table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+		table.setRowHeight(20);
+		JScrollPane scroll = new JScrollPane(table);
+		scroll.setPreferredSize(new Dimension(280, 160));
+		gbc.gridx = 1;
+		gbc.gridy = 0;
+		gbc.gridheight = 5;
+		centerPanel.add(scroll, gbc);
 
-		btnAjouterProduit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String selectedProduit = (String) produitCB.getSelectedItem();
-				if (selectedProduit == null || selectedProduit.equals("Sélectionnez un produit")) {
-					JOptionPane.showMessageDialog(contentPane, "Veuillez choisir un produit.", "Erreur",
-							JOptionPane.ERROR_MESSAGE);
-					return;
-				}
+		JButton btnSupprimer = createStyledButton("Supprimer le produit", new Color(231, 76, 60));
+		gbc.gridy = 5;
+		gbc.gridheight = 1;
+		centerPanel.add(btnSupprimer, gbc);
 
-				for (int i = 0; i < tableModel.getRowCount(); i++) {
-					String produitExistant = (String) tableModel.getValueAt(i, 0);
-					if (produitExistant.equals(selectedProduit)) {
-						JOptionPane.showMessageDialog(contentPane, "Ce produit a déjà été ajouté à la commande.",
-								"Erreur", JOptionPane.ERROR_MESSAGE);
-						return;
-					}
-				}
+		// === Boutons bas ===
+		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+		bottomPanel.setOpaque(false);
+		contentPane.add(bottomPanel, BorderLayout.SOUTH);
 
-				int quantiteChoisi;
-				try {
-					quantiteChoisi = Integer.parseInt(quantityTF.getText());
-				} catch (NumberFormatException ex) {
-					JOptionPane.showMessageDialog(contentPane, "Quantité invalide.", "Erreur",
-							JOptionPane.ERROR_MESSAGE);
-					return;
-				}
+		JButton btnValider = createStyledButton("Valider la commande", new Color(41, 128, 185));
+		JButton btnRetour = createStyledButton("Retour", new Color(149, 165, 166));
 
-				if (quantiteChoisi <= 0) {
-					JOptionPane.showMessageDialog(contentPane, "Veuillez saisir une quantité supérieure à 0.", "Erreur",
-							JOptionPane.ERROR_MESSAGE);
-					return;
-				}
+		bottomPanel.add(btnValider);
+		bottomPanel.add(btnRetour);
 
-				int quantiteEntrepot = produitDAO.getQuantiteByNomProduit(selectedProduit);
-				if (quantiteChoisi > quantiteEntrepot) {
-					JOptionPane.showMessageDialog(contentPane,
-							"La quantité demandée est supérieure au stock disponible.", "Erreur",
-							JOptionPane.ERROR_MESSAGE);
-					return;
-				}
+		// === Récupération des produits ===
+		ProduitDAO produitDAO = new ProduitDAO();
+		produitCB.addItem("Sélectionnez un produit");
+		List<String> produits = produitDAO.getProduitStoreStockBelowMinimum();
+		produits.forEach(produitCB::addItem);
 
-				tableModel.addRow(new Object[] { selectedProduit, quantiteChoisi });
+		produitCB.addActionListener(e -> {
+			String selectedProduit = (String) produitCB.getSelectedItem();
+			if (selectedProduit != null && !selectedProduit.equals("Sélectionnez un produit")) {
+				int quantite = produitDAO.getQuantiteByNomProduit(selectedProduit);
+				lblStock.setText("Stock Entrepôt : " + quantite);
+			} else {
+				lblStock.setText("Stock Entrepôt : -");
 			}
 		});
 
-		JButton btnSupprimerProduit = new JButton("Supprimer le produit sélectionné");
-		btnSupprimerProduit.setBackground(new Color(231, 76, 60));
-		btnSupprimerProduit.setForeground(Color.WHITE);
-		btnSupprimerProduit.setBounds(360, 177, 255, 22);
-		contentPane.add(btnSupprimerProduit);
-
-		btnSupprimerProduit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				int selectedRow = tableProduits.getSelectedRow();
-				if (selectedRow != -1) {
-					tableModel.removeRow(selectedRow);
-				} else {
-					JOptionPane.showMessageDialog(contentPane, "Veuillez sélectionner un produit à supprimer.",
-							"Information", JOptionPane.INFORMATION_MESSAGE);
-				}
+		// === Action bouton Ajouter ===
+		btnAjouter.addActionListener(e -> {
+			String produit = (String) produitCB.getSelectedItem();
+			if (produit == null || produit.equals("Sélectionnez un produit")) {
+				showMessage("Veuillez choisir un produit.", "Erreur", JOptionPane.ERROR_MESSAGE);
+				return;
 			}
-		});
 
-		JScrollPane scrollPane = new JScrollPane(tableProduits);
-		scrollPane.setBounds(360, 40, 255, 126);
-		contentPane.add(scrollPane);
-
-		JButton validBtn = new JButton("Valider la commande");
-		validBtn.setBackground(new Color(46, 204, 113));
-		validBtn.setForeground(Color.WHITE);
-		validBtn.setBounds(183, 282, 255, 22);
-		contentPane.add(validBtn);
-
-		validBtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (tableModel.getRowCount() == 0) {
-					JOptionPane.showMessageDialog(contentPane, "Veuillez ajouter au moins un produit.", "Erreur",
-							JOptionPane.ERROR_MESSAGE);
+			for (int i = 0; i < tableModel.getRowCount(); i++) {
+				if (tableModel.getValueAt(i, 0).equals(produit)) {
+					showMessage("Ce produit a déjà été ajouté.", "Erreur", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
-
-				CommandeDAO cmdeDAO = new CommandeDAO();
-				boolean success = true;
-
-				for (int i = 0; i < tableModel.getRowCount(); i++) {
-					String produit = (String) tableModel.getValueAt(i, 0);
-					int quantite = (int) tableModel.getValueAt(i, 1);
-
-					boolean created = cmdeDAO.createCommande(user.getRole(), produit, quantite);
-					if (!created) {
-						success = false;
-						break;
-					}
-				}
-
-				if (success) {
-					JOptionPane.showMessageDialog(contentPane, "Commandes enregistrées avec succès.", "Information",
-							JOptionPane.INFORMATION_MESSAGE);
-					new PageAccueil(user).setVisible(true);
-					dispose();
-				} else {
-					JOptionPane.showMessageDialog(contentPane, "Une erreur s'est produite.", "Erreur",
-							JOptionPane.ERROR_MESSAGE);
-				}
 			}
+
+			int qte;
+			try {
+				qte = Integer.parseInt(quantityTF.getText());
+				if (qte <= 0)
+					throw new NumberFormatException();
+			} catch (NumberFormatException ex) {
+				showMessage("Quantité invalide.", "Erreur", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+
+			int stock = produitDAO.getQuantiteByNomProduit(produit);
+			if (qte > stock) {
+				showMessage("Quantité supérieure au stock.", "Erreur", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+
+			tableModel.addRow(new Object[] { produit, qte });
 		});
 
-		JButton btnRetour = new JButton("Retour");
-		btnRetour.setBackground(new Color(52, 152, 219));
-		btnRetour.setForeground(Color.WHITE);
-		btnRetour.setBounds(10, 322, 85, 21);
-		contentPane.add(btnRetour);
+		// === Supprimer ligne sélectionnée ===
+		btnSupprimer.addActionListener(e -> {
+			int row = table.getSelectedRow();
+			if (row >= 0)
+				tableModel.removeRow(row);
+			else
+				showMessage("Sélectionnez un produit à supprimer.", "Info", JOptionPane.INFORMATION_MESSAGE);
+		});
 
-		btnRetour.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				PageAccueil accueil = new PageAccueil(user);
-				accueil.setVisible(true);
+		// === Valider la commande ===
+		btnValider.addActionListener(e -> {
+			if (tableModel.getRowCount() == 0) {
+				showMessage("Ajoutez au moins un produit.", "Erreur", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+
+			CommandeDAO commandeDAO = new CommandeDAO();
+			boolean success = true;
+
+			for (int i = 0; i < tableModel.getRowCount(); i++) {
+				String pdt = (String) tableModel.getValueAt(i, 0);
+				int qty = (int) tableModel.getValueAt(i, 1);
+				if (!commandeDAO.createCommande(user.getRole(), pdt, qty)) {
+					success = false;
+					break;
+				}
+			}
+
+			if (success) {
+				showMessage("Commande enregistrée avec succès !", "Succès", JOptionPane.INFORMATION_MESSAGE);
+				new PageAccueil(user).setVisible(true);
 				dispose();
+			} else {
+				showMessage("Une erreur s'est produite.", "Erreur", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 
+		// === Retour ===
+		btnRetour.addActionListener(e -> {
+			new PageAccueil(user).setVisible(true);
+			dispose();
+		});
+	}
+
+	private JButton createStyledButton(String text, Color bgColor) {
+		JButton btn = new JButton(text);
+		btn.setBackground(bgColor);
+		btn.setForeground(Color.WHITE);
+		btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btn.setFocusPainted(false);
+		btn.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+		btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		return btn;
+	}
+
+	private void showMessage(String msg, String title, int type) {
+		JOptionPane.showMessageDialog(contentPane, msg, title, type);
 	}
 }
