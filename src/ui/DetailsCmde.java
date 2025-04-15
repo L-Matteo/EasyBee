@@ -10,6 +10,7 @@ import model.Utilisateur;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -23,54 +24,59 @@ public class DetailsCmde extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField textFieldNomProduit;
-	private JTextField textFieldQtnProduit;
+	private JTextField textFieldQtnPrepa;
 
 	public DetailsCmde(Utilisateur user, String cmdeSlectionne) {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(370,250,660,390);
+		setBounds(570, 250, 700, 420);
+		setTitle("Détails de la commande en attente - Gestion des stocks");
+		setResizable(false);
+		
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBackground(new Color(240, 245, 255));
+		contentPane.setBorder(new EmptyBorder(15, 15, 15, 15));
 
 		setContentPane(contentPane);
-		
-		
-		JButton btnNewButton = new JButton("Retour");
-		btnNewButton.setBounds(10, 322, 85, 21);
-		btnNewButton.setBackground(new Color(128, 128, 255));
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ListeCmde listeCmde = new ListeCmde(user);
-				listeCmde.setVisible(true);
-				dispose();
-			}
-		});
 		contentPane.setLayout(null);
-		contentPane.add(btnNewButton);
 		
-		JLabel lblNomProduit = new JLabel("Produit : ");
-		lblNomProduit.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNomProduit.setBounds(192, 104, 112, 13);
+		JLabel lblTitle = new JLabel("Détails de la commande");
+		lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		lblTitle.setForeground(new Color(50, 50, 100));
+		lblTitle.setBounds(241, 39, 230, 25);
+		contentPane.add(lblTitle);
+		
+		JLabel lblNomProduit = new JLabel("Nom du produit : ");
+		lblNomProduit.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		lblNomProduit.setBounds(200, 89, 158, 13);
 		contentPane.add(lblNomProduit);
 		
 		textFieldNomProduit = new JTextField();
 		textFieldNomProduit.setEditable(false);
-		textFieldNomProduit.setBounds(192, 126, 247, 19);
+		textFieldNomProduit.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		textFieldNomProduit.setBounds(200, 112, 284, 25);
 		contentPane.add(textFieldNomProduit);
 		textFieldNomProduit.setColumns(10);
 		
-		JLabel lblQntProduit = new JLabel("Quantité :");
-		lblQntProduit.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblQntProduit.setBounds(190, 153, 126, 13);
-		contentPane.add(lblQntProduit);
+		JLabel lblQteDemande = new JLabel("Quantité demandée : ");
+		lblQteDemande.setBounds(200, 147, 226, 25);
+		lblQteDemande.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		contentPane.add(lblQteDemande);
 		
-		textFieldQtnProduit = new JTextField();
-		textFieldQtnProduit.setEditable(false);
-		textFieldQtnProduit.setBounds(192, 176, 245, 19);
-		contentPane.add(textFieldQtnProduit);
-		textFieldQtnProduit.setColumns(10);
+		JLabel lblQntPrepa = new JLabel("Quantité préparée:");
+		lblQntPrepa.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		lblQntPrepa.setBounds(200, 182, 192, 13);
+		contentPane.add(lblQntPrepa);
+		
+		textFieldQtnPrepa = new JTextField();
+		textFieldQtnPrepa.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		textFieldQtnPrepa.setBounds(200, 205, 284, 25);
+		contentPane.add(textFieldQtnPrepa);
+		textFieldQtnPrepa.setColumns(10);
 		
 		JCheckBox chckbxStatus = new JCheckBox("Préparation de la commande terminée");
-		chckbxStatus.setBounds(190, 212, 249, 21);
+		chckbxStatus.setBounds(200, 250, 249, 21);
+		chckbxStatus.setBackground(new Color(240, 245, 255));
 		contentPane.add(chckbxStatus);
 		
 		CommandeDAO cmdeDAO = new CommandeDAO();
@@ -78,20 +84,15 @@ public class DetailsCmde extends JFrame {
 		
 		if(commande != null) {
 			textFieldNomProduit.setText(commande.getNom());
-			textFieldQtnProduit.setText(String.valueOf(commande.getQte()));
+			lblQteDemande.setText("Quantité demandée : " + String.valueOf(commande.getQte()));
 		} else {
 			JOptionPane.showMessageDialog(this, "Impossible de trouver la commande", "ERREUR", JOptionPane.ERROR_MESSAGE);
 			ListeCmde listeCmde = new ListeCmde(user);
 			listeCmde.setVisible(true);
 			dispose();
 		}
-
-		JLabel lblDetails = new JLabel("Détails de la commande");
-		lblDetails.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblDetails.setBounds(218, 50, 230, 13);
-		contentPane.add(lblDetails);
 		
-		JButton btnTerminer = new JButton("Terminer");
+		JButton btnTerminer = new JButton("Terminer"); // modifier la requête pour sauvegarder la quantité préparée
 		btnTerminer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(chckbxStatus.isSelected()) {
@@ -105,9 +106,27 @@ public class DetailsCmde extends JFrame {
 				}
 			}
 		});
-		btnTerminer.setBackground(new Color(128, 128, 255));
-		btnTerminer.setBounds(192, 256, 245, 21);
+		btnTerminer.setBackground(new Color(46, 204, 113));
+		btnTerminer.setBounds(333, 309, 126, 37);
+		btnTerminer.setForeground(Color.WHITE);
+		btnTerminer.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnTerminer.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 		contentPane.add(btnTerminer);
+		
+		JButton btnRetour = new JButton("Retour");
+		btnRetour.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListeCmde listeCmde = new ListeCmde(user);
+				listeCmde.setVisible(true);
+				dispose();
+			}
+		});
+		btnRetour.setBounds(223, 309, 93, 37);
+		btnRetour.setBackground(new Color(52, 152, 219));
+		btnRetour.setForeground(Color.WHITE);
+		btnRetour.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnRetour.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+		contentPane.add(btnRetour);
 		
 	}
 }
