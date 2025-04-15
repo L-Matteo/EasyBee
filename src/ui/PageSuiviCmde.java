@@ -48,7 +48,7 @@ public class PageSuiviCmde extends JFrame {
 		comboBox.addItem("");
 		
 		CommandeDAO commandeDAO = new CommandeDAO();
-        List<Commande> commandes = commandeDAO.listeCommandeEnCoursDeLivraison();
+        List<Commande> commandes = commandeDAO.listeCommandeStatut("en cours de livraison");
 		
 		for(Commande uneCommande : commandes) {
 			comboBox.addItem(uneCommande.getNom());

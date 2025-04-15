@@ -57,7 +57,7 @@ public class ListeCmde extends JFrame {
 		comboBoxListCmde.addItem("— Sélectionnez une commande —");
 		
 		CommandeDAO commandeDAO = new CommandeDAO();
-        List<Commande> commandes = commandeDAO.listeCommandeEnAttente();
+        List<Commande> commandes = commandeDAO.listeCommandeStatut("en attente");
 		
 		for(Commande commande : commandes) {
 			comboBoxListCmde.addItem(commande.getNom());

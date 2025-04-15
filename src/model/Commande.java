@@ -5,6 +5,7 @@ public class Commande {
 	private String nom;
 	private int qte;
 	private String statut;
+	
 		
 	public Commande(String nom, int qte, String statut) {
 		this.nom = nom;
