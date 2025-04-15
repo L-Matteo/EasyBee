@@ -6,8 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import model.Commande;
 import utils.ConnexionBdd;
 
@@ -72,11 +70,7 @@ public class CommandeDAO {
 		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
 			stmt.setString(1, newStatut);
 			stmt.setString(2, nomCommande);
-			
-			int rowUpdated = stmt.executeUpdate();
-			if(rowUpdated > 0) {
-				JOptionPane.showMessageDialog(null, "Vous avez finis de préparer la commande", "Succès", 0);
-			}
+			stmt.executeUpdate();
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}

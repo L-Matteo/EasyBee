@@ -84,7 +84,7 @@ public class PageAccueil extends JFrame {
 		btnSuiviCmde.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if(user.getRole() == 1) {
-					PageSuiviCmde suiviCmde = new PageSuiviCmde();
+					PageSuiviCmde suiviCmde = new PageSuiviCmde(user);
 					suiviCmde.setVisible(true);
 					dispose();
 				} else {

@@ -96,6 +96,7 @@ public class DetailsCmde extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if(chckbxStatus.isSelected()) {
 					cmdeDAO.changerStatutCommande(cmdeSlectionne, "en cours de livraison");
+					JOptionPane.showMessageDialog(contentPane, "Le statut de la commande a été changé.", "Succès",0);
 					ListeCmde listeCmde = new ListeCmde(user);
 					listeCmde.setVisible(true);
 					dispose();
