@@ -96,8 +96,15 @@ public class DetailsCmde extends JFrame {
 		btnTerminer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(chckbxStatus.isSelected()) {
+					try {
+						int qtePrepa = Integer.parseInt(textFieldQtnPrepa.getText());
+						cmdeDAO.createDetailsCmde(qtePrepa);
+					} catch(NumberFormatException e1) {
+						JOptionPane.showMessageDialog(contentPane, "La valeur du champ \"Quantité préparée\" n'est pas valable.", "ERREUR", JOptionPane.ERROR_MESSAGE);
+						e1.printStackTrace();
+					}
 					cmdeDAO.changerStatutCommande(cmdeSlectionne, "en cours de livraison");
-					JOptionPane.showMessageDialog(contentPane, "Le statut de la commande a été changé.", "Succès",0);
+					JOptionPane.showMessageDialog(contentPane, "Le statut de la commande a été changé.", "Succès", JOptionPane.INFORMATION_MESSAGE);
 					ListeCmde listeCmde = new ListeCmde(user);
 					listeCmde.setVisible(true);
 					dispose();

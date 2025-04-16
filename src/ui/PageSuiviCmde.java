@@ -14,6 +14,7 @@ import model.Utilisateur;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -28,24 +29,34 @@ public class PageSuiviCmde extends JFrame {
 	public PageSuiviCmde(Utilisateur user) {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(370,250,660,390);
+		setBounds(570, 250, 700, 420);
 		setTitle("Suivi des commandes");
+		setResizable(false);
+		
 		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBackground(new Color(240, 245, 255));
+		contentPane.setBorder(new EmptyBorder(15, 15, 15, 15));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblSuiviCmde = new JLabel("Suivi des commandes");
-		lblSuiviCmde.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblSuiviCmde.setBounds(225, 38, 200, 22);
-		contentPane.add(lblSuiviCmde);
+		JLabel lblTitle = new JLabel("Suivi des commandes en cours de livraison");
+		lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		lblTitle.setForeground(new Color(50, 50, 100));
+		lblTitle.setBounds(157, 34, 418, 22);
+		contentPane.add(lblTitle);
+		
+		JLabel lblSelectCmd = new JLabel("Commandes en cours de livraison :");
+		lblSelectCmd.setBounds(188, 86, 276, 13);
+		lblSelectCmd.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		contentPane.add(lblSelectCmd);
 		
 		JComboBox<String> comboBox = new JComboBox<>();
-		comboBox.setBounds(193, 124, 255, 21);
+		comboBox.setBounds(188, 118, 300, 31);
+		comboBox.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		contentPane.add(comboBox);
 		
-		comboBox.addItem("");
+		comboBox.addItem("— Sélectionnez une commande —");
 		
 		CommandeDAO commandeDAO = new CommandeDAO();
         List<Commande> commandes = commandeDAO.listeCommandeStatut("en cours de livraison");
@@ -55,7 +66,8 @@ public class PageSuiviCmde extends JFrame {
 		}
 		
 		JCheckBox chckbxNewStatut = new JCheckBox("La commande a bien été livrée");
-		chckbxNewStatut.setBounds(193, 183, 245, 21);
+		chckbxNewStatut.setBounds(188, 171, 245, 21);
+		chckbxNewStatut.setBackground(new Color(240, 245, 255));
 		contentPane.add(chckbxNewStatut);
 		
 		JButton btnTermine = new JButton("Terminé");
@@ -77,8 +89,11 @@ public class PageSuiviCmde extends JFrame {
 				}
 			}
 		});
-		btnTermine.setBounds(193, 260, 255, 21);
-		btnTermine.setBackground(new Color(128, 128, 255));
+		btnTermine.setBackground(new Color(46, 204, 113));
+		btnTermine.setForeground(Color.WHITE);
+		btnTermine.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnTermine.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+		btnTermine.setBounds(282, 219, 120, 37);
 		contentPane.add(btnTermine);
 		
 		JButton btnRetour = new JButton("Retour");
@@ -89,8 +104,11 @@ public class PageSuiviCmde extends JFrame {
 				dispose();
 			}
 		});
-		btnRetour.setBounds(10, 322, 85, 21);
-		btnRetour.setBackground(new Color(128, 128, 255));
+		btnRetour.setBounds(10, 322, 120, 37);
+		btnRetour.setBackground(new Color(52, 152, 219));
+		btnRetour.setForeground(Color.WHITE);
+		btnRetour.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnRetour.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 		contentPane.add(btnRetour);
 		
 	}

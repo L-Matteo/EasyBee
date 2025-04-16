@@ -29,6 +29,17 @@ public class CommandeDAO {
 		}
 	}
 	
+	public void createDetailsCmde(int qtePrepa) {
+		String query = "insert into detailcmd(qtePrepa) values(?)"; // ajouter le where 
+		
+		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
+			stmt.setInt(1, qtePrepa);
+			stmt.executeUpdate();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public List<Commande> listeCommandeStatut(String statut) 
 	{	
 		List<Commande> cmdes = new ArrayList<>();
