@@ -73,7 +73,7 @@ public class PageSuiviCmde extends JFrame {
 		JButton btnTermine = new JButton("Terminé");
 		btnTermine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {  
-				if(comboBox.getSelectedItem() != "") {
+				if(comboBox.getSelectedItem() != "— Sélectionnez une commande —") {
 					if(chckbxNewStatut.isSelected()) {
 						String cmdeSelectionne = (String)comboBox.getSelectedItem();
 						commandeDAO.changerStatutCommande(cmdeSelectionne, "livrée");
