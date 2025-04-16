@@ -29,11 +29,12 @@ public class CommandeDAO {
 		}
 	}
 	
-	public void createDetailsCmde(int qtePrepa) {
-		String query = "insert into detailcmd(qtePrepa) values(?)"; // ajouter le where 
+	public void updateQtePrepa(int qtePrepa, int id) {
+		String query = "update detailcmd set qtePrepa = ? where idCmdeApproDepot = ?";
 		
 		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
 			stmt.setInt(1, qtePrepa);
+			stmt.setInt(2, id);
 			stmt.executeUpdate();
 		} catch(SQLException e) {
 			e.printStackTrace();
@@ -90,4 +91,20 @@ public class CommandeDAO {
 		}
 	}
 	
-}
+	public int selectIdCmde(String nomCommande) 
+	{
+		String query = "select id from cmdeapprodepot where nomCommande = ?";
+		
+		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
+			stmt.setString(1, nomCommande);
+			try(ResultSet rs = stmt.executeQuery()){
+				if(rs.next()) {
+					return rs.getInt("id");
+				}
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+} 

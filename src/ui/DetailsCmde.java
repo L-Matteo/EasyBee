@@ -92,13 +92,15 @@ public class DetailsCmde extends JFrame {
 			dispose();
 		}
 		
+		int id = cmdeDAO.selectIdCmde(cmdeSlectionne);
+		
 		JButton btnTerminer = new JButton("Terminer"); // modifier la requête pour sauvegarder la quantité préparée
 		btnTerminer.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(chckbxStatus.isSelected()) {
 					try {
 						int qtePrepa = Integer.parseInt(textFieldQtnPrepa.getText());
-						cmdeDAO.createDetailsCmde(qtePrepa);
+						cmdeDAO.updateQtePrepa(qtePrepa,id);
 					} catch(NumberFormatException e1) {
 						JOptionPane.showMessageDialog(contentPane, "La valeur du champ \"Quantité préparée\" n'est pas valable.", "ERREUR", JOptionPane.ERROR_MESSAGE);
 						e1.printStackTrace();

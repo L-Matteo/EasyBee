@@ -2,6 +2,7 @@ package model;
 
 public class Commande {
 
+	private int id;
 	private String nom;
 	private int qte;
 	private String statut;
@@ -13,6 +14,7 @@ public class Commande {
 		this.statut = statut;
 	}
 		
+	public int getId() { return this.id; }
 	public String getNom() { return this.nom; }
 	public void setNom(String nom) { this.nom = nom; }
 	public int getQte() { return this.qte; }

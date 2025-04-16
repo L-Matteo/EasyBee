@@ -77,7 +77,7 @@ public class PageSuiviCmde extends JFrame {
 					if(chckbxNewStatut.isSelected()) {
 						String cmdeSelectionne = (String)comboBox.getSelectedItem();
 						commandeDAO.changerStatutCommande(cmdeSelectionne, "livrée");
-						JOptionPane.showMessageDialog(contentPane, "Le statut de la commande a été changé", "Succès",0);
+						JOptionPane.showMessageDialog(contentPane, "Le statut de la commande a été changé", "Succès", JOptionPane.INFORMATION_MESSAGE);
 						PageSuiviCmde suiviCmde = new PageSuiviCmde(user);
 						suiviCmde.setVisible(true);
 						dispose();
