@@ -44,63 +44,63 @@ public class DetailsCmde extends JFrame {
 		setContentPane(contentPane);
 
 		// === Titre ===
-		JLabel lblTitre = new JLabel("📦 Détails de la commande en attente");
+		JLabel lblTitre = new JLabel("Détails de la commande en attente");
 		lblTitre.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		lblTitre.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblTitre, BorderLayout.NORTH);
 
 		// === Centre ===
-		JPanel centrePanel = new JPanel();
-		centrePanel.setLayout(new BoxLayout(centrePanel, BoxLayout.Y_AXIS));
-		centrePanel.setOpaque(false);
-		contentPane.add(centrePanel, BorderLayout.CENTER);
+		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+		centerPanel.setOpaque(false);
+		contentPane.add(centerPanel, BorderLayout.CENTER);
 
 		// Nom du produit
 		JLabel lblNomProduit = new JLabel("Nom du produit :");
 		lblNomProduit.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		lblNomProduit.setAlignmentX(Component.CENTER_ALIGNMENT);
-		centrePanel.add(lblNomProduit);
+		centerPanel.add(lblNomProduit);
 
-		JTextField textFieldNomProduit = new JTextField();
-		textFieldNomProduit.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		textFieldNomProduit.setMaximumSize(new Dimension(300, 30));
-		textFieldNomProduit.setEditable(false);
-		centrePanel.add(textFieldNomProduit);
+		JTextField tfNomProduit = new JTextField();
+		tfNomProduit.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		tfNomProduit.setMaximumSize(new Dimension(300, 30));
+		tfNomProduit.setEditable(false);
+		centerPanel.add(tfNomProduit);
 
 		// Quantité demandée
 		JLabel lblQntDemandee = new JLabel("Quantité demandée :");
 		lblQntDemandee.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		lblQntDemandee.setAlignmentX(Component.CENTER_ALIGNMENT);
-		centrePanel.add(lblQntDemandee);
+		centerPanel.add(lblQntDemandee);
 
 		// Quantité en stock
-		JLabel lblQntProduitEntrepot = new JLabel("Stock Entrepôt :");
-		lblQntProduitEntrepot.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-		lblQntProduitEntrepot.setAlignmentX(Component.CENTER_ALIGNMENT);
-		centrePanel.add(lblQntProduitEntrepot);
+		JLabel lblQntEntrepot = new JLabel("Stock Entrepôt :");
+		lblQntEntrepot.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		lblQntEntrepot.setAlignmentX(Component.CENTER_ALIGNMENT);
+		centerPanel.add(lblQntEntrepot);
 
 		// Quantité préparée
-		JLabel lblQntProduit = new JLabel("Quantité préparée :");
-		lblQntProduit.setFont(new Font("Segoe UI", Font.BOLD, 14));
-		lblQntProduit.setAlignmentX(Component.CENTER_ALIGNMENT);
-		centrePanel.add(lblQntProduit);
+		JLabel lblQntPrepa = new JLabel("Quantité préparée :");
+		lblQntPrepa.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		lblQntPrepa.setAlignmentX(Component.CENTER_ALIGNMENT);
+		centerPanel.add(lblQntPrepa);
 
-		JTextField textFieldQtnProduit = new JTextField();
-		textFieldQtnProduit.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		textFieldQtnProduit.setMaximumSize(new Dimension(300, 30));
-		centrePanel.add(textFieldQtnProduit);
+		JTextField tfQntPrepa = new JTextField();
+		tfQntPrepa.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		tfQntPrepa.setMaximumSize(new Dimension(300, 30));
+		centerPanel.add(tfQntPrepa);
 
 		// === Récupération des données ===
 		CommandeDAO cmdeDAO = new CommandeDAO();
 		commande = cmdeDAO.afficherDetailsCmdeSelectione(cmdeSelectionne);
 
 		if (commande != null) {
-			textFieldNomProduit.setText(commande.getNom());
+			tfNomProduit.setText(commande.getNom());
 			lblQntDemandee.setText(String.format("Quantité demandée : %d", commande.getQte()));
 
 			ProduitDAO produitDAO = new ProduitDAO();
 			qteProduitEntrepot = produitDAO.getQuantiteByNomProduit(commande.getNom());
-			lblQntProduitEntrepot.setText(String.format("Stock Entrepôt : %d", qteProduitEntrepot));
+			lblQntEntrepot.setText(String.format("Stock Entrepôt : %d", qteProduitEntrepot));
 		} else {
 			JOptionPane.showMessageDialog(this, "Impossible de trouver la commande", "ERREUR",
 					JOptionPane.ERROR_MESSAGE);
@@ -129,7 +129,7 @@ public class DetailsCmde extends JFrame {
 
 		btnTerminer.addActionListener(e -> {
 			try {
-				int qtePrepa = Integer.parseInt(textFieldQtnProduit.getText());
+				int qtePrepa = Integer.parseInt(tfQntPrepa.getText());
 
 				if (qtePrepa < 0) {
 					JOptionPane.showMessageDialog(contentPane, "Quantité invalide (négative).", "Erreur",

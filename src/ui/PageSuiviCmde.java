@@ -1,27 +1,22 @@
 package ui;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
 
 import dao.CommandeDAO;
 import model.Commande;
@@ -31,122 +26,140 @@ public class PageSuiviCmde extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private DefaultTableModel model;
-	private JTable table;
-	private JTextField filterField;
-	private TableRowSorter<DefaultTableModel> sorter;
 
 	public PageSuiviCmde(Utilisateur user) {
-		setTitle("Suivi des commandes");
+		setTitle("Suivi des commandes - Gestion des stocks");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(370, 250, 720, 450);
+		setBounds(370, 250, 660, 420);
 		setResizable(false);
 
-		contentPane = new JPanel(new BorderLayout(15, 15));
-		contentPane.setBorder(new EmptyBorder(20, 20, 20, 20));
-		contentPane.setBackground(new Color(245, 250, 255));
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(240, 245, 255));
+		contentPane.setLayout(null);
 		setContentPane(contentPane);
 
-		// === Titre ===
-		JLabel lblTitle = new JLabel("Suivi des commandes en cours de livraison");
-		lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
-		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		contentPane.add(lblTitle, BorderLayout.NORTH);
+		// === TITRE ===
+		JLabel lblTitre = new JLabel("Suivi des commandes en cours de livraison");
+		lblTitre.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		lblTitre.setForeground(new Color(50, 50, 100));
+		lblTitre.setBounds(82, 30, 480, 25);
+		lblTitre.setHorizontalAlignment(SwingConstants.CENTER);
+		contentPane.add(lblTitre);
 
-		// === Centre : Panel Table + Filtres ===
-		JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
-		centerPanel.setOpaque(false);
-		contentPane.add(centerPanel, BorderLayout.CENTER);
+		JLabel lblCmdes = new JLabel("Commandes en cours de livraison :");
+		lblCmdes.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		lblCmdes.setBounds(172, 80, 300, 20);
+		contentPane.add(lblCmdes);
 
-		// === Champ de filtre ===
-		JPanel filterPanel = new JPanel(new BorderLayout(5, 5));
-		filterPanel.setOpaque(false);
-		filterField = new JTextField();
-		filterField.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-		filterPanel.add(new JLabel("🔍 Filtrer : "), BorderLayout.WEST);
-		filterPanel.add(filterField, BorderLayout.CENTER);
-		centerPanel.add(filterPanel, BorderLayout.NORTH);
+		JComboBox<String> cbListCmdes = new JComboBox<>();
+		cbListCmdes.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+		cbListCmdes.setBounds(172, 105, 300, 30);
+		contentPane.add(cbListCmdes);
+		cbListCmdes.addItem("— Sélectionnez une commande —");
 
-		// === Table ===
-		model = new DefaultTableModel(new Object[] { "Nom commande", "Statut" }, 0) {
-			public boolean isCellEditable(int row, int col) {
-				return false;
+		CommandeDAO commandeDAO = new CommandeDAO();
+
+		Map<String, Commande> commandeMap = new HashMap<>();
+		List<Commande> commandes = commandeDAO.listeCmdeByStatut("en cours de livraison");
+
+		for (Commande uneCommande : commandes) {
+			cbListCmdes.addItem(uneCommande.getNom());
+			commandeMap.put(uneCommande.getNom(), uneCommande);
+		}
+
+		// === CHECKBOX ===
+		JCheckBox chckbxNewStatut = new JCheckBox("La commande a bien été livrée");
+		chckbxNewStatut.setBackground(new Color(240, 245, 255));
+		chckbxNewStatut.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+		chckbxNewStatut.setBounds(197, 150, 250, 25);
+		contentPane.add(chckbxNewStatut);
+
+		// === QUANTITÉ REÇUE ===
+		JLabel lblQntRecu = new JLabel("Quantité Reçue :");
+		lblQntRecu.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		lblQntRecu.setBounds(180, 190, 150, 25);
+		lblQntRecu.setVisible(false);
+		contentPane.add(lblQntRecu);
+
+		JTextField tfQntRecu = new JTextField();
+		tfQntRecu.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		tfQntRecu.setBounds(330, 190, 100, 25);
+		tfQntRecu.setVisible(false);
+		contentPane.add(tfQntRecu);
+
+		// === BOUTON TERMINÉ ===
+		JButton btnTermine = new JButton("Terminé");
+		btnTermine.setBounds(262, 247, 120, 35);
+		btnTermine.setBackground(new Color(46, 204, 113));
+		btnTermine.setForeground(Color.WHITE);
+		btnTermine.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnTermine.setFocusPainted(false);
+		btnTermine.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnTermine.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+		contentPane.add(btnTermine);
+
+		// === BOUTON RETOUR ===
+		JButton btnRetour = new JButton("Retour");
+		btnRetour.setBounds(30, 320, 100, 35);
+		btnRetour.setBackground(new Color(52, 152, 219));
+		btnRetour.setForeground(Color.WHITE);
+		btnRetour.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnRetour.setFocusPainted(false);
+		btnRetour.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnRetour.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+		contentPane.add(btnRetour);
+
+		// === ACTIONS ===
+		chckbxNewStatut.addActionListener(e -> {
+			if (!cbListCmdes.getSelectedItem().equals("— Sélectionnez une commande —")) {
+				boolean checked = chckbxNewStatut.isSelected();
+				lblQntRecu.setVisible(checked);
+				tfQntRecu.setVisible(checked);
+			} else {
+				JOptionPane.showMessageDialog(contentPane, "Veuillez d'abord sélectionner une commande.", "Erreur",
+						JOptionPane.ERROR_MESSAGE);
+				chckbxNewStatut.setSelected(false);
 			}
-		};
+		});
 
-		table = new JTable(model);
-		table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-		table.setRowHeight(22);
-		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnTermine.addActionListener(e -> {
+			if (!cbListCmdes.getSelectedItem().equals("— Sélectionnez une commande —")) {
+				if (chckbxNewStatut.isSelected()) {
+					try {
+						int qntRecu = Integer.parseInt(tfQntRecu.getText().trim());
+						if (qntRecu > 0) {
+							String selectedNom = (String) cbListCmdes.getSelectedItem();
+							Commande cmdeSelectionne = commandeMap.get(selectedNom);
 
-		sorter = new TableRowSorter<>(model);
-		table.setRowSorter(sorter);
+							commandeDAO.updateQntRecu(cmdeSelectionne.getNom(), qntRecu, cmdeSelectionne.getId());
 
-		JScrollPane scrollPane = new JScrollPane(table);
-		centerPanel.add(scrollPane, BorderLayout.CENTER);
+							JOptionPane.showMessageDialog(contentPane, "Le statut de la commande a été changé",
+									"Succès", JOptionPane.INFORMATION_MESSAGE);
 
-		// === Bas de page ===
-		JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-		bottomPanel.setOpaque(false);
+							new PageSuiviCmde(user).setVisible(true);
+							dispose();
+						} else {
+							JOptionPane.showMessageDialog(contentPane,
+									"Veuillez saisir une quantité reçue supérieure à 0.", "Erreur",
+									JOptionPane.ERROR_MESSAGE);
+						}
+					} catch (NumberFormatException ex) {
+						JOptionPane.showMessageDialog(contentPane, "Veuillez saisir une quantité valide.", "Erreur",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				} else {
+					JOptionPane.showMessageDialog(contentPane, "Veuillez confirmer la livraison", "Erreur",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			} else {
+				JOptionPane.showMessageDialog(contentPane, "Aucune commande sélectionnée", "Erreur",
+						JOptionPane.ERROR_MESSAGE);
+			}
+		});
 
-		JButton btnRefresh = createStyledButton("Rafraîchir", new Color(46, 134, 222));
-		JButton btnRetour = createStyledButton("Retour", new Color(52, 152, 219));
-
-		bottomPanel.add(btnRefresh);
-		bottomPanel.add(btnRetour);
-		contentPane.add(bottomPanel, BorderLayout.SOUTH);
-
-		// === Écouteurs ===
-		btnRefresh.addActionListener(e -> chargerCommandes());
 		btnRetour.addActionListener(e -> {
 			new PageAccueil(user).setVisible(true);
 			dispose();
 		});
-
-		filterField.getDocument().addDocumentListener(new DocumentListener() {
-			public void insertUpdate(DocumentEvent e) {
-				filtrer();
-			}
-
-			public void removeUpdate(DocumentEvent e) {
-				filtrer();
-			}
-
-			public void changedUpdate(DocumentEvent e) {
-				filtrer();
-			}
-		});
-
-		// === Chargement initial ===
-		chargerCommandes();
-	}
-
-	private void filtrer() {
-		String text = filterField.getText();
-		if (text.trim().length() == 0) {
-			sorter.setRowFilter(null);
-		} else {
-			sorter.setRowFilter(RowFilter.regexFilter("(?i)" + text));
-		}
-	}
-
-	private void chargerCommandes() {
-		model.setRowCount(0); // Clear table
-		CommandeDAO commandeDAO = new CommandeDAO();
-		List<Commande> commandes = commandeDAO.listeCommandeEnCoursDeLivraison();
-		for (Commande cmd : commandes) {
-			model.addRow(new Object[] { cmd.getNom(), cmd.getStatut() });
-		}
-	}
-
-	private JButton createStyledButton(String text, Color bgColor) {
-		JButton btn = new JButton(text);
-		btn.setBackground(bgColor);
-		btn.setForeground(Color.WHITE);
-		btn.setFont(new Font("Segoe UI", Font.BOLD, 13));
-		btn.setFocusPainted(false);
-		btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btn.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-		return btn;
 	}
 }

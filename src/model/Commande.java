@@ -2,16 +2,25 @@ package model;
 
 public class Commande {
 
+	private int id;
 	private String nom;
 	private int qte;
 	private String statut;
-	private int roleUser;
 	private String date;
 
-	public Commande(String nom, int qte, String statut) {
+	public Commande(int id, String nom, int qte, String statut) {
+		this.id = id;
 		this.nom = nom;
 		this.qte = qte;
 		this.statut = statut;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getNom() {
@@ -36,14 +45,6 @@ public class Commande {
 
 	public void setStatut(String statut) {
 		this.statut = statut;
-	}
-
-	public int getRoleUser() {
-		return this.roleUser;
-	}
-
-	public void setRoleUser(int roleUser) {
-		this.roleUser = roleUser;
 	}
 
 	public String getDate() {

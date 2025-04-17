@@ -56,22 +56,6 @@ public class CommandeDAO {
 		}
 	}
 
-	public List<Commande> listeCommandeEnAttente() {
-		List<Commande> cmdesEnAttente = new ArrayList<>();
-
-		String query = "SELECT nomCommande FROM cmdeapprodepot WHERE statutCommande LIKE '%en attente%'";
-
-		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
-			while (rs.next()) {
-				Commande uneCmdeEnAttente = new Commande(rs.getString("nomCommande"), 0, "en attente");
-				cmdesEnAttente.add(uneCmdeEnAttente);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return cmdesEnAttente;
-	}
-
 	public boolean saveDetailsCmde(Commande cmde, int qtePrepa) {
 		String query = "INSERT INTO detailcmd (idProduit, idBonLivraison, qtePrepa, idCmdeApproDepot) VALUES (?, ?, ?, ?)";
 
@@ -83,7 +67,7 @@ public class CommandeDAO {
 		}
 
 		int idProduit = produit.getIdProduit();
-		int idCmdeApproDepot = this.getCmdeIdByNom(cmde.getNom());
+		int idCmdeApproDepot = cmde.getId();
 		int idBonLivraison = createBonLivraisonIfNeeded();
 
 		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)) {
@@ -95,6 +79,24 @@ public class CommandeDAO {
 			int rowUpdated = stmt.executeUpdate();
 			if (rowUpdated > 0) {
 				this.changerStatutCommande(cmde.getNom(), "en cours de livraison");
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	public boolean updateQntRecu(String nomCommande, int qteRecu, int idCmdeApproDepot) {
+		String query = "UPDATE detailcmd SET qteRecu = ? WHERE idCmdeApproDepot = ?";
+
+		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)) {
+			stmt.setInt(1, qteRecu);
+			stmt.setInt(2, idCmdeApproDepot);
+
+			int rowUpdated = stmt.executeUpdate();
+			if (rowUpdated > 0) {
+				this.changerStatutCommande(nomCommande, "livrée");
 				return true;
 			}
 		} catch (SQLException e) {
@@ -120,31 +122,14 @@ public class CommandeDAO {
 		return -1;
 	}
 
-	public int getCmdeIdByNom(String nomCommande) {
-
-		String query = "SELECT id FROM cmdeapprodepot WHERE nomCommande = ?";
-
-		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)) {
-			stmt.setString(1, nomCommande);
-			try (ResultSet rs = stmt.executeQuery()) {
-				if (rs.next()) {
-					return rs.getInt("id");
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-
 	public Commande afficherDetailsCmdeSelectione(String cmdeSelectionne) {
-		String query = "SELECT nomCommande, statutCommande, qteCmde FROM detailproduit JOIN cmdeapprodepot ON idCmdeApproDepot = cmdeapprodepot.id WHERE nomCommande = ?";
+		String query = "SELECT id, nomCommande, statutCommande, qteCmde FROM detailproduit JOIN cmdeapprodepot ON idCmdeApproDepot = cmdeapprodepot.id WHERE nomCommande = ?";
 
 		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)) {
 			stmt.setString(1, cmdeSelectionne);
 			try (ResultSet rs = stmt.executeQuery()) {
 				if (rs.next()) {
-					return new Commande(rs.getString("nomCommande"), rs.getInt("qteCmde"),
+					return new Commande(rs.getInt("id"), rs.getString("nomCommande"), rs.getInt("qteCmde"),
 							rs.getString("statutCommande"));
 				}
 			}
@@ -171,19 +156,23 @@ public class CommandeDAO {
 		return false;
 	}
 
-	public List<Commande> listeCommandeEnCoursDeLivraison() {
-		List<Commande> lesCommandesEnCoursDeLivraison = new ArrayList<>();
+	public List<Commande> listeCmdeByStatut(String statut) {
+		List<Commande> cmdes = new ArrayList<>();
 
-		String query = "SELECT nomCommande, statutCommande FROM cmdeapprodepot WHERE statutCommande LIKE '%en cours de livraison%'";
+		String query = "SELECT id, nomCommande, statutCommande FROM cmdeapprodepot WHERE statutCommande LIKE ?";
 
-		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
-			while (rs.next()) {
-				Commande uneCommande = new Commande(rs.getString("nomCommande"), 0, rs.getString("statutCommande"));
-				lesCommandesEnCoursDeLivraison.add(uneCommande);
+		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)) {
+			stmt.setString(1, "%" + statut + "%");
+			try (ResultSet rs = stmt.executeQuery()) {
+				while (rs.next()) {
+					Commande uneCmde = new Commande(rs.getInt("id"), rs.getString("nomCommande"), 0,
+							rs.getString("statutCommande"));
+					cmdes.add(uneCmde);
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return lesCommandesEnCoursDeLivraison;
+		return cmdes;
 	}
 }

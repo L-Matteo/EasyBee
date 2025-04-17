@@ -29,7 +29,6 @@ public class ListeCmde extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JComboBox<String> comboBoxListCmde;
 
 	public ListeCmde(Utilisateur user) {
 		setTitle("Liste des commandes en attente - Gestion des stocks");
@@ -54,26 +53,26 @@ public class ListeCmde extends JFrame {
 		centerPanel.setOpaque(false);
 		contentPane.add(centerPanel, BorderLayout.CENTER);
 
-		JLabel lblSelectCdm = new JLabel("Commandes en attente :");
-		lblSelectCdm.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		lblSelectCdm.setAlignmentX(Component.CENTER_ALIGNMENT);
-		centerPanel.add(lblSelectCdm);
+		JLabel lblSelectCmde = new JLabel("Commandes en attente :");
+		lblSelectCmde.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		lblSelectCmde.setAlignmentX(Component.CENTER_ALIGNMENT);
+		centerPanel.add(lblSelectCmde);
 
 		centerPanel.add(Box.createVerticalStrut(10));
 
-		comboBoxListCmde = new JComboBox<>();
-		comboBoxListCmde.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-		comboBoxListCmde.setMaximumSize(new Dimension(300, 30));
-		comboBoxListCmde.setAlignmentX(Component.CENTER_ALIGNMENT);
-		centerPanel.add(comboBoxListCmde);
+		JComboBox<String> cbListCmde = new JComboBox<>();
+		cbListCmde.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+		cbListCmde.setMaximumSize(new Dimension(300, 30));
+		cbListCmde.setAlignmentX(Component.CENTER_ALIGNMENT);
+		centerPanel.add(cbListCmde);
 
-		comboBoxListCmde.addItem("— Sélectionnez une commande —");
+		cbListCmde.addItem("— Sélectionnez une commande —");
 
 		CommandeDAO commandeDAO = new CommandeDAO();
-		List<Commande> commandes = commandeDAO.listeCommandeEnAttente();
+		List<Commande> commandes = commandeDAO.listeCmdeByStatut("en attente");
 
 		for (Commande commande : commandes) {
-			comboBoxListCmde.addItem(commande.getNom());
+			cbListCmde.addItem(commande.getNom());
 		}
 
 		centerPanel.add(Box.createVerticalStrut(20));
@@ -91,7 +90,7 @@ public class ListeCmde extends JFrame {
 
 		// === Évènements ===
 		btnSuivant.addActionListener(e -> {
-			String cmdeSelectionne = (String) comboBoxListCmde.getSelectedItem();
+			String cmdeSelectionne = (String) cbListCmde.getSelectedItem();
 			if (cmdeSelectionne == null || cmdeSelectionne.startsWith("—")) {
 				JOptionPane.showMessageDialog(contentPane, "Veuillez choisir une commande.", "Erreur",
 						JOptionPane.ERROR_MESSAGE);

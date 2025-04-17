@@ -61,25 +61,25 @@ public class PasserCmde extends JFrame {
 		contentPane.add(centerPanel, BorderLayout.CENTER);
 
 		// === Formulaire gauche ===
-		JLabel lblProduit = new JLabel("Nom du produit :");
-		lblProduit.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		JLabel lblNomProduit = new JLabel("Nom du produit :");
+		lblNomProduit.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		centerPanel.add(lblProduit, gbc);
+		centerPanel.add(lblNomProduit, gbc);
 
-		JComboBox<String> produitCB = new JComboBox<>();
-		produitCB.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+		JComboBox<String> cbListProduit = new JComboBox<>();
+		cbListProduit.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		gbc.gridy++;
-		centerPanel.add(produitCB, gbc);
+		centerPanel.add(cbListProduit, gbc);
 
-		JLabel lblQuantite = new JLabel("Quantité :");
-		lblQuantite.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		JLabel lblQnt = new JLabel("Quantité :");
+		lblQnt.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		gbc.gridy++;
-		centerPanel.add(lblQuantite, gbc);
+		centerPanel.add(lblQnt, gbc);
 
-		JTextField quantityTF = new JTextField("0");
+		JTextField tfQnt = new JTextField("0");
 		gbc.gridy++;
-		centerPanel.add(quantityTF, gbc);
+		centerPanel.add(tfQnt, gbc);
 
 		JLabel lblStock = new JLabel("Stock Entrepôt : -");
 		lblStock.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -100,6 +100,7 @@ public class PasserCmde extends JFrame {
 		JTable table = new JTable(tableModel);
 		table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		table.setRowHeight(20);
+
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.setPreferredSize(new Dimension(280, 160));
 		gbc.gridx = 1;
@@ -125,12 +126,12 @@ public class PasserCmde extends JFrame {
 
 		// === Récupération des produits ===
 		ProduitDAO produitDAO = new ProduitDAO();
-		produitCB.addItem("Sélectionnez un produit");
+		cbListProduit.addItem("Sélectionnez un produit");
 		List<String> produits = produitDAO.getProduitStoreStockBelowMinimum();
-		produits.forEach(produitCB::addItem);
+		produits.forEach(cbListProduit::addItem);
 
-		produitCB.addActionListener(e -> {
-			String selectedProduit = (String) produitCB.getSelectedItem();
+		cbListProduit.addActionListener(e -> {
+			String selectedProduit = (String) cbListProduit.getSelectedItem();
 			if (selectedProduit != null && !selectedProduit.equals("Sélectionnez un produit")) {
 				int quantite = produitDAO.getQuantiteByNomProduit(selectedProduit);
 				lblStock.setText("Stock Entrepôt : " + quantite);
@@ -141,7 +142,7 @@ public class PasserCmde extends JFrame {
 
 		// === Action bouton Ajouter ===
 		btnAjouter.addActionListener(e -> {
-			String produit = (String) produitCB.getSelectedItem();
+			String produit = (String) cbListProduit.getSelectedItem();
 			if (produit == null || produit.equals("Sélectionnez un produit")) {
 				showMessage("Veuillez choisir un produit.", "Erreur", JOptionPane.ERROR_MESSAGE);
 				return;
@@ -156,7 +157,7 @@ public class PasserCmde extends JFrame {
 
 			int qte;
 			try {
-				qte = Integer.parseInt(quantityTF.getText());
+				qte = Integer.parseInt(tfQnt.getText());
 				if (qte <= 0)
 					throw new NumberFormatException();
 			} catch (NumberFormatException ex) {
