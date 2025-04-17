@@ -2,6 +2,8 @@ package app;
 
 import java.awt.EventQueue;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import ui.PageConnexion;
 
 public class App {
@@ -19,5 +21,13 @@ public class App {
 				}
 			}
 		});
+
+//		String mdpVendeur = "adminVendeur";
+//		String hashVendeur = BCrypt.hashpw(mdpVendeur, BCrypt.gensalt(12));
+//		System.out.println("Mot de passe du Vendeur haché :\n" + hashVendeur + "\n");
+//
+//		String mdpPrepa = "adminPrepa";
+//		String hashPrepa = BCrypt.hashpw(mdpPrepa, BCrypt.gensalt(12));
+//		System.out.println("Mot de passe du Préparateur haché :\n" + hashPrepa + "\n");
 	}
 }
