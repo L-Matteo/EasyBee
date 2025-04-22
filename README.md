@@ -36,9 +36,9 @@ EasyBee est une entreprise fictive spécialisée dans la vente de matériel apic
  2. Importez le code source dans votre IDE préféré :
     - Ouvrez votre IDE.
     - Sélectionnez l'option "Importer un projet existant" ou équivalent.
- 3. Configurez les paramètres de connexion à la base de données dans le fichier *ConnexionBdd.java*.
+ 3. Configurez les paramètres de connexion à la base de données dans *src/utils/ConnexionBdd.java*.
 #### Lancement :
- 1. Ouvrez le fichier *pageConnexion.java*.
+ 1. Ouvrez le fichier *App.java*.
  2. Exécutez le code pour lancer l'application.
  3. Connectez-vous avec les identifiants présents dans les données de test. 
 
