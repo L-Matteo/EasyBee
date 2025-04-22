@@ -13,22 +13,6 @@ public class CommandeDAO {
 	
 	ConnexionBdd cn = ConnexionBdd.getInstance();
 	
-	public void createCommande(String date, String statut, int roleUser, String nom) 
-	{
-		String query = "insert into cmdeapprodepot(dateCommande, statutCommande, idCatSalarie, nomCommande) values(?,?,?,?)";
-		
-		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
-			stmt.setString(1,date);
-			stmt.setString(2, statut);
-			stmt.setInt(3, roleUser);
-			stmt.setString(4, nom);
-			stmt.executeUpdate();
-			System.out.println("Commande ajouté avec succès");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public void updateQtePrepa(int qtePrepa, int id) {
 		String query = "update detailcmd set qtePrepa = ? where idCmdeApproDepot = ?";
 		

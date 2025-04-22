@@ -30,7 +30,7 @@ public class PageSuiviCmde extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(570, 250, 700, 420);
-		setTitle("Suivi des commandes");
+		setTitle("Suivi des commandes - Gestion des stocks");
 		setResizable(false);
 		
 		contentPane = new JPanel();
