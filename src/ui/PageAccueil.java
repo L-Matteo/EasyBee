@@ -20,8 +20,15 @@ public class PageAccueil extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JButton btnCommande;
+	private JButton btnSuiviCmde;
+	private JButton btnPrepa;
+	private JButton btnDeco; 
+	private Utilisateur user;
 
 	public PageAccueil(Utilisateur user) {
+		
+		this.user = user; 
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(570, 250, 700, 420);
@@ -53,32 +60,15 @@ public class PageAccueil extends JFrame {
 		lblPreparateurs.setBounds(406, 120, 183, 21);
 		contentPane.add(lblPreparateurs);
 		
-		JButton btnCommande = new JButton("Passer Commande d'approvisionnement");
-		btnCommande.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
+		btnCommande = new JButton("Passer Commande d'approvisionnement");
 		btnCommande.setBounds(76, 164, 291, 37);
 		btnCommande.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		btnCommande.setBackground(new Color(100, 150, 255));
 		btnCommande.setForeground(Color.WHITE);
 		btnCommande.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 		contentPane.add(btnCommande);
-		
-		JButton btnSuiviCmde = new JButton("Suivi des commandes");
-		btnSuiviCmde.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(user.getRole() == 1) {
-					PageSuiviCmde suiviCmde = new PageSuiviCmde(user);
-					suiviCmde.setVisible(true);
-					dispose();
-				} else {
-					JOptionPane.showMessageDialog(contentPane,"Vous n'avez pas le rôle nécessaire pour accéder à cette fonctionnalité",
-							"ERREUR", JOptionPane.ERROR_MESSAGE); 
-				}
-				
-			}
-		});
+		 
+		btnSuiviCmde = new JButton("Suivi des commandes");
 		btnSuiviCmde.setBounds(76, 227, 291, 37);
 		btnSuiviCmde.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		btnSuiviCmde.setBackground(new Color(100, 150, 255));
@@ -86,20 +76,7 @@ public class PageAccueil extends JFrame {
 		btnSuiviCmde.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 		contentPane.add(btnSuiviCmde);
 		
-		JButton btnPrepa = new JButton("Liste des commandes");
-		btnPrepa.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				if(user.getRole() == 2) {
-					ListeCmde listeCommande = new ListeCmde(user);
-					listeCommande.setVisible(true);
-					dispose();
-				} else {
-					JOptionPane.showMessageDialog(contentPane,"Vous n'avez pas le rôle nécessaire pour accéder à cette fonctionnalité",
-							"ERREUR", JOptionPane.ERROR_MESSAGE); 
-				}
-			}
-		}); 
+		btnPrepa = new JButton("Liste des commandes");
 		btnPrepa.setBounds(406, 164, 196, 37);
 		btnPrepa.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		btnPrepa.setBackground(new Color(100, 150, 255));
@@ -107,14 +84,7 @@ public class PageAccueil extends JFrame {
 		btnPrepa.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 		contentPane.add(btnPrepa);
 		
-		JButton btnDeco = new JButton("Déconnexion");
-		btnDeco.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				PageConnexion pageConnexion = new PageConnexion();
-				pageConnexion.setVisible(true);
-				dispose();
-			}
-		});
+		btnDeco = new JButton("Déconnexion");
 		btnDeco.setBackground(new Color(220, 80, 80));
 		btnDeco.setForeground(Color.WHITE);
 		btnDeco.setFont(new Font("Segoe UI", Font.PLAIN, 14));
@@ -122,4 +92,13 @@ public class PageAccueil extends JFrame {
 		btnDeco.setBounds(10, 322, 120, 37);
 		contentPane.add(btnDeco);
 	}
+	
+	public Utilisateur getUser() { return this.user; } 
+	public JButton getBtnCommande() { return btnCommande; }
+	public JButton getBtnSuiviCmde() { return btnSuiviCmde; }
+	public JButton getBtnPrepa() { return btnPrepa; }
+	public JButton getBtnDeco() { return btnDeco; }
+	
+	public void close() { this.dispose(); } 
+
 }

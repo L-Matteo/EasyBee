@@ -32,8 +32,9 @@ public class UtilisateurController {
 		if (user != null) {
             JOptionPane.showMessageDialog(view, "Vous êtes connecté.");
             PageAccueil accueil = new PageAccueil(user);
-            view.close();
+            new AccueilController(accueil);
             accueil.setVisible(true);       
+            view.close();
         } else {
             JOptionPane.showMessageDialog(view, "ERREUR | Identifiant ou mot de passe incorrect.", "Erreur connexion",
                     JOptionPane.ERROR_MESSAGE);
