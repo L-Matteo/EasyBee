@@ -2,6 +2,8 @@ package app;
 
 import java.awt.EventQueue;
 
+import controller.UtilisateurController;
+import dao.UtilisateurDAO;
 import ui.PageConnexion;
 
 public class App {
@@ -12,8 +14,10 @@ public class App {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PageConnexion frame = new PageConnexion();
-					frame.setVisible(true);
+					PageConnexion view = new PageConnexion();
+					UtilisateurDAO dao = new UtilisateurDAO();
+					new UtilisateurController(view, dao);
+					view.setVisible(true);	
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

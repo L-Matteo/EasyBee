@@ -4,16 +4,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import dao.UtilisateurDAO;
-import model.Utilisateur;
-
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.JPasswordField;
 
 import java.awt.Color;
@@ -26,7 +21,8 @@ public class PageConnexion extends JFrame {
 	private JPanel contentPane;
 	private JTextField textFieldLogin;
 	private JPasswordField passwordField;
-
+	private JButton btnConnexion;
+ 
 	public PageConnexion() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -79,29 +75,7 @@ public class PageConnexion extends JFrame {
 		showPassword.setBackground(new Color(240, 245, 255));
 		contentPane.add(showPassword);
 		
-		JButton btnConnexion = new JButton("Se connecter");
-		btnConnexion.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent e) {
-				
-				String login = textFieldLogin.getText();
-		        char[] password = passwordField.getPassword();
-		        textFieldLogin.setText(""); 
-		        passwordField.setText("");
-
-		        Utilisateur user = UtilisateurDAO.seConnecter(login, new String(password));
-
-		        if (user != null) {
-		            JOptionPane.showMessageDialog(contentPane, "Vous êtes connecté.");
-		            PageAccueil accueil = new PageAccueil(user);
-		            accueil.setVisible(true);
-		            dispose();
-		        } else {
-		            JOptionPane.showMessageDialog(contentPane, "ERREUR | Identifiant ou mot de passe incorrect.", "Erreur connexion",
-		                    JOptionPane.ERROR_MESSAGE);
-		        }
-			}
-		});
+		btnConnexion = new JButton("Se connecter");
 		btnConnexion.setBounds(214, 278, 218, 47);
 		btnConnexion.setBackground(new Color(100, 150, 255));
 		btnConnexion.setForeground(Color.WHITE);
@@ -111,4 +85,14 @@ public class PageConnexion extends JFrame {
 		
 		
 	}
+	
+	public String getLogin() { return textFieldLogin.getText(); }
+	public void setLogin() { textFieldLogin.setText(""); }
+	
+	public char[] getPassword() { return passwordField.getPassword();}
+	public void setPassword() { passwordField.setText(""); }
+	
+	public void setBtnListener(ActionListener listener) { btnConnexion.addActionListener(listener); }
+	
+	public void close() { this.dispose(); } 
 }

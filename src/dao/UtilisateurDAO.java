@@ -11,7 +11,7 @@ public class UtilisateurDAO {
 	
 	static ConnexionBdd cn = ConnexionBdd.getInstance();
 	
-	public static Utilisateur seConnecter(String login, String password) {
+	public Utilisateur seConnecter(String login, String password) {
 		
 		String query = "SELECT identifiant, idCat FROM salarie WHERE identifiant = ? AND motDePasse = ?";
         

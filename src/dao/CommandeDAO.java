@@ -41,7 +41,7 @@ public class CommandeDAO {
 			}
 		} catch(SQLException e) {
 			e.printStackTrace();
-		}
+		} 
 		return cmdes;
 	}
 	
@@ -61,7 +61,7 @@ public class CommandeDAO {
 		} 
 		return null;
 	}
-	
+	 
 	public void changerStatutCommande(String nomCommande, String newStatut) 
 	{
 		String query = "update cmdeapprodepot set statutCommande = ? where nomCommande = ?";
@@ -92,3 +92,4 @@ public class CommandeDAO {
 		return 0;
 	}
 } 
+ 
