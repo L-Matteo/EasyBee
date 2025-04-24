@@ -2,6 +2,7 @@ package controller;
 
 import javax.swing.JOptionPane;
 
+import dao.CommandeDAO;
 import dao.UtilisateurDAO;
 import model.Utilisateur;
 import ui.ListeCmde;
@@ -24,8 +25,11 @@ public class AccueilController {
 	public void openSuiviCmde() {
 		Utilisateur user = view.getUser();
 		if(user.getRole() == 1) {
-			view.close();
 			PageSuiviCmde suiviCmde = new PageSuiviCmde(user);
+			CommandeDAO dao = new CommandeDAO();
+			CommandeController controller = new CommandeController(dao, user); 
+			controller.setSuiviView(suiviCmde);
+			view.close();
 			suiviCmde.setVisible(true);
 		} else {
 			JOptionPane.showMessageDialog(view,"Vous n'avez pas le rôle nécessaire pour accéder à cette fonctionnalité",
@@ -36,9 +40,12 @@ public class AccueilController {
 	public void openListeCmde() {
 		Utilisateur user = view.getUser();
 		if(user.getRole() == 2) {
-			view.close();
 			ListeCmde listeCommande = new ListeCmde(user);
-			listeCommande.setVisible(true);
+			CommandeDAO dao = new CommandeDAO();
+			CommandeController controller = new CommandeController(dao, user); 
+			controller.setListeView(listeCommande);
+			view.close();
+			listeCommande.setVisible(true); 
 		} else {
 			JOptionPane.showMessageDialog(view,"Vous n'avez pas le rôle nécessaire pour accéder à cette fonctionnalité",
 					"ERREUR", JOptionPane.ERROR_MESSAGE); 
@@ -46,10 +53,10 @@ public class AccueilController {
 	}
 	
 	public void seDeconnecter() {
-		view.close();
 		PageConnexion pageConnexion = new PageConnexion();
 		UtilisateurDAO dao = new UtilisateurDAO();
 		new UtilisateurController(pageConnexion, dao);
+		view.close();
 		pageConnexion.setVisible(true);
 	}
  

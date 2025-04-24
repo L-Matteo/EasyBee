@@ -1,20 +1,14 @@
 package ui;
 
-import java.util.List;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import dao.CommandeDAO;
-import model.Commande;
 import model.Utilisateur;
 
 import javax.swing.JComboBox;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -23,6 +17,9 @@ public class ListeCmde extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JComboBox<String> comboBoxListCmde;
+	private JButton btnNext;
+	private JButton btnRetour;
 
 	public ListeCmde(Utilisateur user) {
 		
@@ -49,29 +46,13 @@ public class ListeCmde extends JFrame {
 		lblSelectCmd.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		contentPane.add(lblSelectCmd);
 		
-		JComboBox<String> comboBoxListCmde = new JComboBox<>();
+		comboBoxListCmde = new JComboBox<>();
 		comboBoxListCmde.setBounds(196, 131, 300, 31);
 		comboBoxListCmde.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		contentPane.add(comboBoxListCmde);
-		
 		comboBoxListCmde.addItem("— Sélectionnez une commande —");
 		
-		CommandeDAO commandeDAO = new CommandeDAO();
-        List<Commande> commandes = commandeDAO.listeCommandeStatut("en attente");
-		
-		for(Commande commande : commandes) {
-			comboBoxListCmde.addItem(commande.getNom());
-		}
-		
-		JButton btnNext = new JButton("Suivant");
-		btnNext.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String cmdeSelectionne = (String)comboBoxListCmde.getSelectedItem();
-				DetailsCmde cmde = new DetailsCmde(user, cmdeSelectionne);
-				cmde.setVisible(true);
-				dispose();
-			}
-		});
+		btnNext = new JButton("Suivant");
 		btnNext.setBackground(new Color(46, 204, 113));
 		btnNext.setForeground(Color.WHITE);
 		btnNext.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -79,14 +60,7 @@ public class ListeCmde extends JFrame {
 		btnNext.setBounds(284, 191, 120, 37);
 		contentPane.add(btnNext);
 		
-		JButton btnRetour = new JButton("Retour");
-		btnRetour.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				PageAccueil accueil = new PageAccueil(user);
-				accueil.setVisible(true);
-				dispose();
-			}
-		});
+		btnRetour = new JButton("Retour");
 		btnRetour.setBounds(10, 322, 120, 37);
 		btnRetour.setBackground(new Color(52, 152, 219));
 		btnRetour.setForeground(Color.WHITE);
@@ -94,5 +68,11 @@ public class ListeCmde extends JFrame {
 		btnRetour.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 		contentPane.add(btnRetour);
 	}
+	
+	public JComboBox<String> getComboBox() { return this.comboBoxListCmde; } 
+	public JButton getBtnNext() { return this.btnNext; } 
+	public JButton getBtnRetour() { return this.btnRetour; }
+
+	public void close() { this.dispose(); }
 
 }
