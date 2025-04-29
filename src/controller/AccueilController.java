@@ -43,7 +43,7 @@ public class AccueilController {
 			ListeCmde listeCommande = new ListeCmde(user);
 			CommandeDAO dao = new CommandeDAO();
 			CommandeController controller = new CommandeController(dao, user); 
-			controller.setListeView(listeCommande);
+			controller.setListeView(listeCommande); 
 			view.close();
 			listeCommande.setVisible(true); 
 		} else {
