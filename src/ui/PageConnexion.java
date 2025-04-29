@@ -93,6 +93,4 @@ public class PageConnexion extends JFrame {
 	public void setPassword() { passwordField.setText(""); }
 	
 	public void setBtnListener(ActionListener listener) { btnConnexion.addActionListener(listener); }
-	
-	public void close() { this.dispose(); } 
 }

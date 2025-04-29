@@ -73,6 +73,4 @@ public class ListeCmde extends JFrame {
 	public JButton getBtnNext() { return this.btnNext; } 
 	public JButton getBtnRetour() { return this.btnRetour; }
 
-	public void close() { this.dispose(); }
-
 }

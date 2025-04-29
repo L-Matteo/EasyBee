@@ -94,8 +94,6 @@ public class PageAccueil extends JFrame {
 	public JButton getBtnCommande() { return btnCommande; }
 	public JButton getBtnSuiviCmde() { return btnSuiviCmde; }
 	public JButton getBtnPrepa() { return btnPrepa; }
-	public JButton getBtnDeco() { return btnDeco; }
-	
-	public void close() { this.dispose(); } 
+	public JButton getBtnDeco() { return btnDeco; } 
 
 }

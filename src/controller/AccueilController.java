@@ -29,7 +29,7 @@ public class AccueilController {
 			CommandeDAO dao = new CommandeDAO();
 			CommandeController controller = new CommandeController(dao, user); 
 			controller.setSuiviView(suiviCmde);
-			view.close();
+			view.dispose();
 			suiviCmde.setVisible(true);
 		} else {
 			JOptionPane.showMessageDialog(view,"Vous n'avez pas le rôle nécessaire pour accéder à cette fonctionnalité",
@@ -44,7 +44,7 @@ public class AccueilController {
 			CommandeDAO dao = new CommandeDAO();
 			CommandeController controller = new CommandeController(dao, user); 
 			controller.setListeView(listeCommande); 
-			view.close();
+			view.dispose();
 			listeCommande.setVisible(true); 
 		} else {
 			JOptionPane.showMessageDialog(view,"Vous n'avez pas le rôle nécessaire pour accéder à cette fonctionnalité",
@@ -56,7 +56,7 @@ public class AccueilController {
 		PageConnexion pageConnexion = new PageConnexion();
 		UtilisateurDAO dao = new UtilisateurDAO();
 		new UtilisateurController(pageConnexion, dao);
-		view.close();
+		view.dispose();
 		pageConnexion.setVisible(true);
 	}
  

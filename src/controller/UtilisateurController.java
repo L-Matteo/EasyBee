@@ -33,7 +33,7 @@ public class UtilisateurController {
             JOptionPane.showMessageDialog(view, "Vous êtes connecté.");
             PageAccueil accueil = new PageAccueil(user);
             new AccueilController(accueil);
-            view.close();
+            view.dispose();
             accueil.setVisible(true);       
         } else {
             JOptionPane.showMessageDialog(view, "ERREUR | Identifiant ou mot de passe incorrect.", "Erreur connexion",

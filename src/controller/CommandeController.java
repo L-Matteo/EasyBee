@@ -81,7 +81,7 @@ public class CommandeController {
 		this.cmdeSelectionne = (String)listView.getComboBox().getSelectedItem();
 		DetailsCmde cmde = new DetailsCmde(user, cmdeSelectionne); 
 		setDetailsView(cmde);
-		listView.close();
+		listView.dispose();
 		cmde.setVisible(true);
 	}
 	  
@@ -89,7 +89,7 @@ public class CommandeController {
 	{
 		PageAccueil accueil = new PageAccueil(user);
 		new AccueilController(accueil);
-		listView.close();
+		listView.dispose();
 		accueil.setVisible(true);
 	}
 	
