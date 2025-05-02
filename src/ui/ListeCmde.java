@@ -67,10 +67,10 @@ public class ListeCmde extends JFrame {
 		btnRetour.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		btnRetour.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 		contentPane.add(btnRetour);
+
 	}
 	
 	public JComboBox<String> getComboBox() { return this.comboBoxListCmde; } 
 	public JButton getBtnNext() { return this.btnNext; } 
 	public JButton getBtnRetour() { return this.btnRetour; }
-
 }

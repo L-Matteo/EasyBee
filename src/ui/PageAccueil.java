@@ -88,6 +88,7 @@ public class PageAccueil extends JFrame {
 		btnDeco.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 		btnDeco.setBounds(10, 322, 120, 37);
 		contentPane.add(btnDeco);
+		
 	}
 	
 	public Utilisateur getUser() { return this.user; } 

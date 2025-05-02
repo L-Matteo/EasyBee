@@ -102,4 +102,5 @@ public class DetailsCmde extends JFrame {
 	public JCheckBox getCheckBox() { return this.chckbxStatus; } 
 	public JButton getBtnTerminer() { return this.btnTerminer; }
 	public JButton getBtnRetour() { return this.btnRetour; } 
+	
 }
