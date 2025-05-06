@@ -12,7 +12,7 @@ public class ConnexionBdd {
 	private ConnexionBdd() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			con=DriverManager.getConnection("jdbc:mysql://localhost/easybee","user_easybee","mdp");
+			con=DriverManager.getConnection("jdbc:mysql://localhost/easybee_java","root","root");
 			System.out.println("connexion reussie");
 		}
 		catch(Exception ex) {

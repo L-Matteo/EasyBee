@@ -13,47 +13,47 @@ public class CommandeDAO {
 	
 	ConnexionBdd cn = ConnexionBdd.getInstance();
 	
-	public void createCommande(String date, String statut, int roleUser, String nom) {
-		
-		String query = "insert into cmdeapprodepot(dateCommande, statutCommande, idCatSalarie, nomCommande) values(?,?,?,?)";
+	public void updateQtePrepa(int qtePrepa, int id) {
+		String query = "update detailcmd set qtePrepa = ? where idCmdeApproDepot = ?";
 		
 		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
-			stmt.setString(1,date);
-			stmt.setString(2, statut);
-			stmt.setInt(3, roleUser);
-			stmt.setString(4, nom);
+			stmt.setInt(1, qtePrepa);
+			stmt.setInt(2, id);
 			stmt.executeUpdate();
-			System.out.println("Commande ajouté avec succès");
-		} catch (SQLException e) {
-			System.out.println("Erreur lors de l'insertion de la commande : " + e.getMessage());
-		}
-	}
-	
-	public List<String> listeCommandeEnAttente() {
-		
-		List<String> commandes = new ArrayList<>();
-		
-		String query = "Select nomCommande from cmdeapprodepot where statutCommande like '%en attente%'";
-		
-		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query); ResultSet rs = stmt.executeQuery()){
-			while(rs.next()) {
-				commandes.add(rs.getString("nomCommande"));
-			}
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
-		return commandes;
 	}
 	
-	public Commande afficherDetailsCmdeSelectione(String cmdeSelectionne) {
+	public List<Commande> listeCommandeStatut(String statut) 
+	{	
+		List<Commande> cmdes = new ArrayList<>();
 		
-		String query = "select nomCommande, qtePrepa from detailcmd join cmdeapprodepot on idCmdeApproDepot = cmdeapprodepot.id where nomCommande = ?";
+		String query = "Select nomCommande, statutCommande from cmdeapprodepot where statutCommande like ?";
+		
+		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
+			stmt.setString(1, "%" + statut + "%");
+			try (ResultSet rs = stmt.executeQuery()){
+				while(rs.next()) {
+					Commande uneCmde = new Commande(rs.getString("nomCommande"),0 ,rs.getString("statutCommande"));
+					cmdes.add(uneCmde);
+				}
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} 
+		return cmdes;
+	}
+	
+	public Commande afficherDetailsCmdeSelectione(String cmdeSelectionne) 
+	{
+		String query = "select nomCommande, designationProduit, qteCmde from detailproduit join cmdeapprodepot on idCmdeApproDepot = cmdeapprodepot.id join produit on idProduit = produit.id where nomCommande = ?";
 		
 		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query)) {
 			stmt.setString(1,cmdeSelectionne);
 			try(ResultSet rs = stmt.executeQuery()){
 				if(rs.next()) {
-					return new Commande(rs.getString("nomCommande"), rs.getInt("qtePrepa"));
+					return new Commande(rs.getString("designationProduit"), rs.getInt("qteCmde"), "");
 				}
 			} 
 		} catch(SQLException e) {
@@ -61,4 +61,35 @@ public class CommandeDAO {
 		} 
 		return null;
 	}
+	 
+	public void changerStatutCommande(String nomCommande, String newStatut) 
+	{
+		String query = "update cmdeapprodepot set statutCommande = ? where nomCommande = ?";
+		
+		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
+			stmt.setString(1, newStatut);
+			stmt.setString(2, nomCommande);
+			stmt.executeUpdate();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public int selectIdCmde(String nomCommande) 
+	{
+		String query = "select id from cmdeapprodepot where nomCommande = ?";
+		
+		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
+			stmt.setString(1, nomCommande);
+			try(ResultSet rs = stmt.executeQuery()){
+				if(rs.next()) {
+					return rs.getInt("id");
+				}
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 } 
+ 
