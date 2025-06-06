@@ -9,6 +9,7 @@ import ui.ListeCmde;
 import ui.PageAccueil;
 import ui.PageConnexion;
 import ui.PageSuiviCmde;
+import ui.PasserCommande;
 
 public class AccueilController {
 	
@@ -17,6 +18,7 @@ public class AccueilController {
 	public AccueilController(PageAccueil view) {
 		this.view = view;
 		
+		this.view.getBtnCommande().addActionListener(e -> openPasserCommande());
 		this.view.getBtnSuiviCmde().addActionListener(e -> openSuiviCmde()); 
 		this.view.getBtnPrepa().addActionListener(e -> openListeCmde());
 		this.view.getBtnDeco().addActionListener(e -> seDeconnecter());
@@ -49,6 +51,20 @@ public class AccueilController {
 		} else {
 			JOptionPane.showMessageDialog(view,"Vous n'avez pas le rôle nécessaire pour accéder à cette fonctionnalité",
 					"ERREUR", JOptionPane.ERROR_MESSAGE); 
+		}
+	}
+	
+	public void openPasserCommande()
+	{
+		Utilisateur user = view.getUser();
+		
+		if(user.getRole() == 1) {
+			PasserCommande passerCommande = new PasserCommande();
+			// Modifier pour mettre le controller
+			view.dispose();
+			passerCommande.setVisible(true);
+		} else {
+			JOptionPane.showMessageDialog(view,"Vous n'avez pas le rôle nécessaire pour accéder à cette fonctionnalité","ERREUR", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
