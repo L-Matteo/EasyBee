@@ -17,7 +17,7 @@ public class CommandeController {
 	Utilisateur user;
 	String cmdeSelectionne;
 	CommandeDAO dao;
-	ListeCmde listView;
+	ListeCmde listView; 
 	DetailsCmde detailsView;
 	PageSuiviCmde suiviCmde;
 	
@@ -126,9 +126,19 @@ public class CommandeController {
 	
 	public void changerStatusSuiviCmde() 
 	{
-		if(suiviCmde.getComboBox().getSelectedItem() != "— Sélectionnez une commande —") {
+		this.cmdeSelectionne = (String) suiviCmde.getComboBox().getSelectedItem();
+		
+		int id = dao.selectIdCmde(cmdeSelectionne);
+		int qteRecu = Integer.parseInt(suiviCmde.getQteReçu().getText());
+		
+		if(!cmdeSelectionne.equals("— Sélectionnez une commande —")) {
 			if(suiviCmde.getCheckBox().isSelected()) {
-				String cmdeSelectionne = (String)suiviCmde.getComboBox().getSelectedItem();
+				try {
+					dao.updateQteRecu(qteRecu, id);
+				} catch(NumberFormatException e) {
+					JOptionPane.showMessageDialog(suiviCmde,"La valeur du champ \"Quantité reçue\" n'est pas valable.", "ERREUR", JOptionPane.ERROR_MESSAGE);
+					e.printStackTrace();
+				}
 				dao.changerStatutCommande(cmdeSelectionne, "livrée");
 				JOptionPane.showMessageDialog(suiviCmde, "Le statut de la commande a été changé", "Succès", JOptionPane.INFORMATION_MESSAGE);
 				PageSuiviCmde pageSuiviCmde = new PageSuiviCmde(user);

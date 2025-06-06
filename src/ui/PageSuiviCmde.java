@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JCheckBox;
+import javax.swing.JTextField;
 
 public class PageSuiviCmde extends JFrame {
 
@@ -23,6 +24,7 @@ public class PageSuiviCmde extends JFrame {
 	private JCheckBox chckbxNewStatut;
 	private JButton btnTermine;
 	private JButton btnRetour;
+	private JTextField QteRecu;
 
 	public PageSuiviCmde(Utilisateur user) {
 		
@@ -50,13 +52,13 @@ public class PageSuiviCmde extends JFrame {
 		contentPane.add(lblSelectCmd);
 		
 		comboBox = new JComboBox<>();
-		comboBox.setBounds(188, 118, 300, 31);
+		comboBox.setBounds(188, 109, 300, 31);
 		comboBox.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		contentPane.add(comboBox);
 		comboBox.addItem("— Sélectionnez une commande —");
         
 		chckbxNewStatut = new JCheckBox("La commande a bien été livrée");
-		chckbxNewStatut.setBounds(188, 171, 245, 21);
+		chckbxNewStatut.setBounds(187, 224, 245, 21);
 		chckbxNewStatut.setBackground(new Color(240, 245, 255));
 		contentPane.add(chckbxNewStatut);
 		
@@ -65,7 +67,7 @@ public class PageSuiviCmde extends JFrame {
 		btnTermine.setForeground(Color.WHITE);
 		btnTermine.setFont(new Font("Segoe UI", Font.BOLD, 13));
 		btnTermine.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-		btnTermine.setBounds(282, 219, 120, 37);
+		btnTermine.setBounds(282, 266, 120, 37);
 		contentPane.add(btnTermine);
 		
 		btnRetour = new JButton("Retour");
@@ -76,10 +78,22 @@ public class PageSuiviCmde extends JFrame {
 		btnRetour.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 		contentPane.add(btnRetour);
 		
+		QteRecu = new JTextField();
+		QteRecu.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		QteRecu.setBounds(188, 180, 300, 25);
+		contentPane.add(QteRecu);
+		QteRecu.setColumns(10);
+		
+		JLabel lblQteReçue= new JLabel("Quantité reçue : ");
+		lblQteReçue.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		lblQteReçue.setBounds(188, 157, 192, 13);
+		contentPane.add(lblQteReçue);
+		
 	}
 	
 	public JComboBox<String> getComboBox() { return this.comboBox; } 
 	public JCheckBox getCheckBox() { return this.chckbxNewStatut; } 
 	public JButton getBtnTermine() { return this.btnTermine; }
 	public JButton getBtnRetour() { return this.btnRetour; } 
+	public JTextField getQteReçu() { return this.QteRecu; } 
 }

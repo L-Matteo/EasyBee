@@ -13,11 +13,25 @@ public class CommandeDAO {
 	
 	ConnexionBdd cn = ConnexionBdd.getInstance();
 	
-	public void updateQtePrepa(int qtePrepa, int id) {
+	public void updateQtePrepa(int qtePrepa, int id) 
+	{
 		String query = "update detailcmd set qtePrepa = ? where idCmdeApproDepot = ?";
 		
 		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
 			stmt.setInt(1, qtePrepa);
+			stmt.setInt(2, id);
+			stmt.executeUpdate();
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateQteRecu(int qteRecu, int id)
+	{
+		String query = "update detailcmd set qteRecu = ? where idCmdeApproDepot = ?";
+		
+		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
+			stmt.setInt(1, qteRecu);
 			stmt.setInt(2, id);
 			stmt.executeUpdate();
 		} catch(SQLException e) {
@@ -92,4 +106,3 @@ public class CommandeDAO {
 		return 0;
 	}
 } 
- 
