@@ -3,6 +3,7 @@ package controller;
 import javax.swing.JOptionPane;
 
 import dao.CommandeDAO;
+import dao.ProduitDAO;
 import dao.UtilisateurDAO;
 import model.Utilisateur;
 import ui.ListeCmde;
@@ -28,8 +29,9 @@ public class AccueilController {
 		Utilisateur user = view.getUser();
 		if(user.getRole() == 1) {
 			PageSuiviCmde suiviCmde = new PageSuiviCmde(user);
-			CommandeDAO dao = new CommandeDAO();
-			CommandeController controller = new CommandeController(dao, user); 
+			CommandeDAO daoCmde = new CommandeDAO();
+			ProduitDAO daoProduit = new ProduitDAO();
+			CommandeController controller = new CommandeController(daoCmde, daoProduit, user); 
 			controller.setSuiviView(suiviCmde);
 			view.dispose();
 			suiviCmde.setVisible(true);
@@ -43,8 +45,9 @@ public class AccueilController {
 		Utilisateur user = view.getUser();
 		if(user.getRole() == 2) {
 			ListeCmde listeCommande = new ListeCmde(user);
-			CommandeDAO dao = new CommandeDAO();
-			CommandeController controller = new CommandeController(dao, user); 
+			CommandeDAO daoCmde = new CommandeDAO();
+			ProduitDAO daoProduit = new ProduitDAO();
+			CommandeController controller = new CommandeController(daoCmde, daoProduit, user); 
 			controller.setListeView(listeCommande); 
 			view.dispose();
 			listeCommande.setVisible(true); 
@@ -60,7 +63,10 @@ public class AccueilController {
 		
 		if(user.getRole() == 1) {
 			PasserCommande passerCommande = new PasserCommande();
-			// Modifier pour mettre le controller
+			CommandeDAO daoCmde = new CommandeDAO();
+			ProduitDAO daoProduit = new ProduitDAO();
+			CommandeController controller = new CommandeController(daoCmde, daoProduit, user); 
+			controller.setPasserCommande(passerCommande);
 			view.dispose();
 			passerCommande.setVisible(true);
 		} else {
