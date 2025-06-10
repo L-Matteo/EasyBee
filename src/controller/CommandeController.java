@@ -1,29 +1,36 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 
 import dao.CommandeDAO;
+import dao.ProduitDAO;
 import model.Commande;
+import model.Produit;
 import model.Utilisateur;
 import ui.DetailsCmde;
 import ui.ListeCmde;
 import ui.PageAccueil;
 import ui.PageSuiviCmde;
+import ui.PasserCommande;
 
 public class CommandeController {
 	
 	Utilisateur user;
 	String cmdeSelectionne;
-	CommandeDAO dao;
+	CommandeDAO daoCmde;
+	ProduitDAO daoProduit;
 	ListeCmde listView; 
 	DetailsCmde detailsView;
 	PageSuiviCmde suiviCmde;
+	PasserCommande passerCmde;
 	
-	public CommandeController(CommandeDAO dao, Utilisateur user) 
+	public CommandeController(CommandeDAO daoCmde, ProduitDAO daoProduit, Utilisateur user) 
 	{
-		this.dao = dao;
+		this.daoCmde = daoCmde;
+		this.daoProduit = daoProduit;
 		this.user = user;
 	}
 	
@@ -31,7 +38,7 @@ public class CommandeController {
 	{
 		this.listView = view;
 		
-		List<Commande> commandes = dao.listeCommandeStatut("en attente");
+		List<Commande> commandes = daoCmde.listeCommandeStatut("en attente");
 		for(Commande commande : commandes) {
 			listView.getComboBox().addItem(commande.getNom());
 		}
@@ -44,7 +51,7 @@ public class CommandeController {
 	{
 		this.detailsView = view;
 		 
-		Commande commande = dao.afficherDetailsCmdeSelectione(cmdeSelectionne);
+		Commande commande = daoCmde.afficherDetailsCmdeSelectione(cmdeSelectionne);
 		
 		if(commande != null) {
 			detailsView.getNomProduit().setText(commande.getNom());
@@ -66,7 +73,7 @@ public class CommandeController {
 	{
 		this.suiviCmde = view;
 		
-		List<Commande> commandes = dao.listeCommandeStatut("en cours de livraison");
+		List<Commande> commandes = daoCmde.listeCommandeStatut("en cours de livraison");
 		
 		for(Commande uneCommande : commandes) {
 			this.suiviCmde.getComboBox().addItem(uneCommande.getNom());
@@ -74,6 +81,20 @@ public class CommandeController {
 		
 		this.suiviCmde.getBtnTermine().addActionListener(e -> changerStatusSuiviCmde());
 		this.suiviCmde.getBtnRetour().addActionListener(e -> retourAccueilSuiviCmde()); 
+	}
+	
+	public void setPasserCommande(PasserCommande view)
+	{
+		this.passerCmde = view;
+		
+		ArrayList<Produit> lesProduits = daoProduit.listeProduit();
+		
+		for(Produit unProduit: lesProduits) {
+			this.passerCmde.getComboBox().addItem(unProduit.getDesignationProduit());
+		}
+		
+		this.passerCmde.getBtnRetour().addActionListener(e -> retourAccueilPasserCmde());
+		this.passerCmde.getBtnAddProduit().addActionListener(e -> addProduitTable());
 	}
 	
 	public void openDetailsCmde() 
@@ -95,17 +116,17 @@ public class CommandeController {
 	
 	public void changerStatusDetailsCmde() 
 	{
-		int id = dao.selectIdCmde(cmdeSelectionne); 
+		int id = daoCmde.selectIdCmde(cmdeSelectionne); 
 		
 		if(detailsView.getCheckBox().isSelected()) {
 			try {
 				int qtePrepa = Integer.parseInt(detailsView.getQtnPrepa().getText());
-				dao.updateQtePrepa(qtePrepa,id);
+				daoCmde.updateQtePrepa(qtePrepa,id);
 			} catch(NumberFormatException e1) {
 				JOptionPane.showMessageDialog(detailsView, "La valeur du champ \"Quantité préparée\" n'est pas valable.", "ERREUR", JOptionPane.ERROR_MESSAGE);
 				e1.printStackTrace();
 			}
-			dao.changerStatutCommande(cmdeSelectionne, "en cours de livraison");
+			daoCmde.changerStatutCommande(cmdeSelectionne, "en cours de livraison");
 			JOptionPane.showMessageDialog(detailsView, "Le statut de la commande a été changé.", "Succès", JOptionPane.INFORMATION_MESSAGE);
 			ListeCmde listeCmde = new ListeCmde(user);
 			setListeView(listeCmde);
@@ -128,18 +149,18 @@ public class CommandeController {
 	{
 		this.cmdeSelectionne = (String) suiviCmde.getComboBox().getSelectedItem();
 		
-		int id = dao.selectIdCmde(cmdeSelectionne);
+		int id = daoCmde.selectIdCmde(cmdeSelectionne);
 		int qteRecu = Integer.parseInt(suiviCmde.getQteReçu().getText());
 		
 		if(!cmdeSelectionne.equals("— Sélectionnez une commande —")) {
 			if(suiviCmde.getCheckBox().isSelected()) {
 				try {
-					dao.updateQteRecu(qteRecu, id);
+					daoCmde.updateQteRecu(qteRecu, id);
 				} catch(NumberFormatException e) {
 					JOptionPane.showMessageDialog(suiviCmde,"La valeur du champ \"Quantité reçue\" n'est pas valable.", "ERREUR", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
-				dao.changerStatutCommande(cmdeSelectionne, "livrée");
+				daoCmde.changerStatutCommande(cmdeSelectionne, "livrée");
 				JOptionPane.showMessageDialog(suiviCmde, "Le statut de la commande a été changé", "Succès", JOptionPane.INFORMATION_MESSAGE);
 				PageSuiviCmde pageSuiviCmde = new PageSuiviCmde(user);
 				setSuiviView(pageSuiviCmde); 
@@ -159,6 +180,21 @@ public class CommandeController {
 		new AccueilController(accueil);
 		suiviCmde.dispose();
 		accueil.setVisible(true); 
+	}
+	
+	public void retourAccueilPasserCmde()
+	{
+		PageAccueil accueil = new PageAccueil(user);
+		new AccueilController(accueil);
+		passerCmde.dispose();
+		accueil.setVisible(true);
+	}
+	
+	// ne fonctionne pas
+	public void addProduitTable()
+	{
+		Produit produit = (Produit) passerCmde.getComboBox().getSelectedItem();
+		passerCmde.getModel().addRow(new Object[] {produit.getCodeProduit(),produit.getDesignationProduit(),25});
 	}
 
 }
