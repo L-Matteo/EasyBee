@@ -8,9 +8,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import model.Produit;
+
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JTable;
@@ -20,15 +24,18 @@ public class PasserCommande extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	
-	private JComboBox<String> comboBoxProduit;
+	private JComboBox<Produit> comboBoxProduit;
 	private JTextField textFieldQte;
 	private JButton btnAddProduit;
 	private JButton btnRetour;
 	private JButton btnValider;
 	private DefaultTableModel model;
 	private JButton btnSupProduit;
+	private JTable table;
+	private JLabel lblStock;
 
 	public PasserCommande() {
+		UIManager.put("Button.disabledText", Color.WHITE); // Obliger le bouton désactiver à avoir un text de couleur blanc
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(570, 250, 765, 465);
 		setTitle("Passer une commande - Gestion des stocks");
@@ -56,9 +63,9 @@ public class PasserCommande extends JFrame {
 		comboBoxProduit.setBounds(88, 117, 234, 31);
 		comboBoxProduit.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		contentPane.add(comboBoxProduit);
-		comboBoxProduit.addItem("— Sélectionnez un produit —");
+		comboBoxProduit.addItem(new Produit(0,0,"— Sélectionnez un produit —",0));
 		
-		JLabel lblStock = new JLabel("Stock Entrepôt : ");
+		lblStock = new JLabel("Stock Entrepôt :");
 		lblStock.setBounds(88, 165, 226, 25);
 		lblStock.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		contentPane.add(lblStock);
@@ -103,7 +110,7 @@ public class PasserCommande extends JFrame {
 		model.addColumn("Nom");
 		model.addColumn("Quantité");
 		
-		JTable table = new JTable(model);
+		table = new JTable(model);
 		
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(378, 92, 322, 183);
@@ -118,12 +125,14 @@ public class PasserCommande extends JFrame {
 		contentPane.add(btnSupProduit);
 	}
 	
-	public JComboBox<String> getComboBox() { return this.comboBoxProduit; }
+	public JComboBox<Produit> getComboBox() { return this.comboBoxProduit; }
 	public JTextField getTextFieldQte() { return this.textFieldQte; }
 	public JButton getBtnAddProduit() { return this.btnAddProduit; }
 	public JButton getBtnRetour() { return this.btnRetour; }
 	public JButton getBtnValider() { return this.btnValider; } 
 	public DefaultTableModel getModel() { return this.model; }
+	public JTable getTable() { return this.table; }
 	public JButton getBtnSuprProduit() { return this.btnSupProduit; }
+	public JLabel getLabelStock() { return this.lblStock; }
 	
-}
+} 
