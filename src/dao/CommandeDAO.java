@@ -3,6 +3,7 @@ package dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,25 +106,25 @@ public class CommandeDAO {
 		}
 		return 0;
 	}
-	
-	// Peut-être séparer en deux pour pouvoir commander plusieurs produit par commande, comme ça on appel une fois la méthode pour la table cmdeApproDepot et plusieurs fois la méthode pour la table détailsProduit (pour chaque produit) 
-	public void addCommande(int idCatSalarie, String nomCommande, int idProduit, int idCmde, int qteCmde) 
+	 
+	public int addCmdeApproDepot(int idCatSalarie) 
 	{
-		String query1 = "insert into cmdeapprodepot(dateCommande, statutCommande, idCatSalarie, nomCommande)"
-				+ " values(CURRENT_DATE(),en attente,?,?)";
+		String queryInsert = "insert into cmdeapprodepot(dateCommande, statutCommande, idCatSalarie, nomCommande)"
+				+ " values(CURRENT_DATE(),'en attente',?,'')";
 		
-		try(PreparedStatement stmt1 = cn.laconnexion().prepareStatement(query1)){
-			stmt1.setInt(1, idCatSalarie);
-			stmt1.setString(2, nomCommande);
+		try(PreparedStatement stmtInsert = cn.laconnexion().prepareStatement(queryInsert, Statement.RETURN_GENERATED_KEYS)){
+			stmtInsert.setInt(1, idCatSalarie);
+			stmtInsert.executeUpdate();
 			
-			if(stmt1.executeUpdate() > 0) {
-				String query2 = "insert into detailproduit(idProduit, idCmdeApproDepot, qteCmde) values(?,?,?)";
-				
-				try(PreparedStatement stmt2 = cn.laconnexion().prepareStatement(query2)) {
-					stmt2.setInt(1, idProduit);
-					stmt2.setInt(2, idCmde);
-					stmt2.setInt(3, qteCmde);
-					stmt2.executeUpdate();				
+			ResultSet rs = stmtInsert.getGeneratedKeys();
+			if(rs.next()) {
+				int id = rs.getInt(1);
+				String queryUpdate = "update cmdeapprodepot set nomCommande = CONCAT('Commande n°', ?) where id = ?";
+				try(PreparedStatement stmtUpdate = cn.laconnexion().prepareStatement(queryUpdate)){
+					stmtUpdate.setInt(1, id);
+					stmtUpdate.setInt(2, id);
+					stmtUpdate.executeUpdate();
+					return id;
 				} catch(SQLException e) {
 					e.printStackTrace();
 				}
@@ -131,5 +132,23 @@ public class CommandeDAO {
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
+		return 0;
 	}
+	
+	public boolean addDetailsProduit(int idProduit, int idCmde, int qteCmde)
+	{
+		String query = "insert into detailproduit(idProduit, idCmdeApproDepot, qteCmde) values(?,?,?)";
+		
+		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
+			stmt.setInt(1, idProduit);
+			stmt.setInt(2, idCmde);
+			stmt.setInt(3, qteCmde); 
+			stmt.executeUpdate();
+			return true;
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 } 
