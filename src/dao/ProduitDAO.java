@@ -33,9 +33,38 @@ public class ProduitDAO {
 		return lesProduits; 
 	}
 	
-	public void voirStockEntrepot(int idProduit) 
+	public int selectIdProduit(int codeProduit)
 	{
+		String query = "select id from produit where codeProduit = ?";
 		
+		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
+			stmt.setInt(1, codeProduit);
+			try(ResultSet rs = stmt.executeQuery()){
+				if(rs.next()) {
+					return rs.getInt("id");
+				}
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public int voirStockEntrepot(int idProduit) 
+	{
+		String query = "select stockEntrepot from produit where id = ?";
+		
+		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
+			stmt.setInt(1, idProduit);
+			try(ResultSet rs = stmt.executeQuery()) {
+				if(rs.next()) {
+					return rs.getInt("stockEntrepot");
+				}
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 
 }
