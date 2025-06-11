@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class CommandeController {
 			detailsView.getNomProduit().setText(commande.getNom());
 			detailsView.getQtnDemande().setText("Quantité demandée : " + String.valueOf(commande.getQte()));
 		} else {
-			JOptionPane.showMessageDialog(detailsView, "Impossible de trouver la commande", "ERREUR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(detailsView, "Impossible de trouver la commande", "Erreur", JOptionPane.ERROR_MESSAGE);
 			ListeCmde listeCmde = new ListeCmde(user);
 			setListeView(listeCmde); 
 			detailsView.dispose();
@@ -90,11 +91,31 @@ public class CommandeController {
 		ArrayList<Produit> lesProduits = daoProduit.listeProduit();
 		
 		for(Produit unProduit: lesProduits) {
-			this.passerCmde.getComboBox().addItem(unProduit.getDesignationProduit());
-		}
+			this.passerCmde.getComboBox().addItem(unProduit);
+		} 
+		
+		passerCmde.getComboBox().addItemListener(e -> {
+			Produit produitSelectionne = (Produit) passerCmde.getComboBox().getSelectedItem();
+			int stock = daoProduit.voirStockEntrepot(produitSelectionne.getId());
+			this.passerCmde.getLabelStock().setText("Stock Entrepôt : " + stock);
+		});
+		
+		passerCmde.getBtnValider().setEnabled(false);
+		passerCmde.getBtnValider().setBackground(new Color(149, 165, 166));
+		
+		passerCmde.getModel().addTableModelListener(e -> {
+		    int rowCount = passerCmde.getModel().getRowCount();
+		    boolean hasRows = rowCount > 0;
+		    passerCmde.getBtnValider().setEnabled(hasRows);
+		    passerCmde.getBtnValider().setBackground(
+		        hasRows ? new Color(100, 150, 255) : new Color(149, 165, 166)
+		    );
+		});
 		
 		this.passerCmde.getBtnRetour().addActionListener(e -> retourAccueilPasserCmde());
 		this.passerCmde.getBtnAddProduit().addActionListener(e -> addProduitTable());
+		this.passerCmde.getBtnSuprProduit().addActionListener(e -> supProduitTable());
+		this.passerCmde.getBtnValider().addActionListener(e -> validerCmde());
 	}
 	
 	public void openDetailsCmde() 
@@ -123,7 +144,7 @@ public class CommandeController {
 				int qtePrepa = Integer.parseInt(detailsView.getQtnPrepa().getText());
 				daoCmde.updateQtePrepa(qtePrepa,id);
 			} catch(NumberFormatException e1) {
-				JOptionPane.showMessageDialog(detailsView, "La valeur du champ \"Quantité préparée\" n'est pas valable.", "ERREUR", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(detailsView, "La valeur du champ \"Quantité préparée\" n'est pas valable.", "Erreur", JOptionPane.ERROR_MESSAGE);
 				e1.printStackTrace();
 			}
 			daoCmde.changerStatutCommande(cmdeSelectionne, "en cours de livraison");
@@ -157,7 +178,7 @@ public class CommandeController {
 				try {
 					daoCmde.updateQteRecu(qteRecu, id);
 				} catch(NumberFormatException e) {
-					JOptionPane.showMessageDialog(suiviCmde,"La valeur du champ \"Quantité reçue\" n'est pas valable.", "ERREUR", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(suiviCmde,"La valeur du champ \"Quantité reçue\" n'est pas valable.", "Erreur", JOptionPane.ERROR_MESSAGE);
 					e.printStackTrace();
 				}
 				daoCmde.changerStatutCommande(cmdeSelectionne, "livrée");
@@ -167,10 +188,10 @@ public class CommandeController {
 				suiviCmde.dispose();
 				pageSuiviCmde.setVisible(true); 
 			} else {
-				JOptionPane.showMessageDialog(suiviCmde, "La commande est toujours en cours de livraison", "ERREUR", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(suiviCmde, "La commande est toujours en cours de livraison", "Erreur", JOptionPane.ERROR_MESSAGE);
 			} 
 		} else {
-			JOptionPane.showMessageDialog(suiviCmde, "Erreur dans la sélection de la commande", "ERREUR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(suiviCmde, "Erreur dans la sélection de la commande", "Erreur", JOptionPane.ERROR_MESSAGE);
 		}
 	} 
 	
@@ -190,11 +211,79 @@ public class CommandeController {
 		accueil.setVisible(true);
 	}
 	
-	// ne fonctionne pas
 	public void addProduitTable()
 	{
-		Produit produit = (Produit) passerCmde.getComboBox().getSelectedItem();
-		passerCmde.getModel().addRow(new Object[] {produit.getCodeProduit(),produit.getDesignationProduit(),25});
+		Produit produitSelectionne = (Produit) passerCmde.getComboBox().getSelectedItem();
+		String textQte = passerCmde.getTextFieldQte().getText();
+		
+		if(produitSelectionne.getCodeProduit() != 0) {
+			
+			if(!textQte.isEmpty()) {
+				
+				int qte = Integer.parseInt(textQte);
+				
+				if(qte > 0) {
+					passerCmde.getModel().addRow(new Object[] {
+							produitSelectionne.getCodeProduit(),
+							produitSelectionne.getDesignationProduit(),
+							qte
+					});
+				} else {
+					JOptionPane.showMessageDialog(passerCmde, "Veuillez saisir une quantité valide.","Erreur",JOptionPane.ERROR_MESSAGE);
+				}
+			} else {
+				JOptionPane.showMessageDialog(passerCmde, "Veuillez saisir une quantité valide.","Erreur",JOptionPane.ERROR_MESSAGE);
+			}
+		} else {
+			JOptionPane.showMessageDialog(passerCmde, "Veuillez choisir un produit valide.","Erreur",JOptionPane.ERROR_MESSAGE);
+		}
 	}
+	
+	public void supProduitTable()
+	{
+		int selectedRow = passerCmde.getTable().getSelectedRow();
+	    if (selectedRow != -1) {
+	    	passerCmde.getModel().removeRow(selectedRow);
+	    } else {
+	    	JOptionPane.showMessageDialog(passerCmde, "Veuillez sélectionner un produit à supprimer.", "Erreur", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+	
+	public void validerCmde()
+	{
+		int countRow = passerCmde.getModel().getRowCount();
+		
+		if(countRow > 0) {
+			int idRole = user.getRole();
+			int idCmde = daoCmde.addCmdeApproDepot(idRole);
+			
+			if(idCmde != 0) {
+				
+				int rowCount = passerCmde.getModel().getRowCount();
+				
+				for(int i = 0; i < rowCount; i++) {
+					try {
+						int codeProduit = (int) passerCmde.getTable().getValueAt(i, 0);
+						int idProduit = daoProduit.selectIdProduit(codeProduit);
+						int qteProduit = (int) passerCmde.getTable().getValueAt(i, 2);
+						daoCmde.addDetailsProduit(idProduit, idCmde, qteProduit);	
+					} catch(Exception e) {
+						e.printStackTrace();
+					}
+				}
+				
+				JOptionPane.showMessageDialog(passerCmde, "Votre commande a bien été ajoutée.", "Confirmation", JOptionPane.INFORMATION_MESSAGE);
+				PasserCommande passerCommande = new PasserCommande();
+				passerCmde.dispose();
+				setPasserCommande(passerCommande);
+				passerCommande.setVisible(true);
+			} else {
+				JOptionPane.showMessageDialog(passerCmde, "Erreur dans l'ajout de la commande, veuillez réessayer", "Erreur", JOptionPane.ERROR_MESSAGE);
+			}
+		} else {
+			JOptionPane.showMessageDialog(passerCmde, "Erreur dans la commande, veuillez ajouter au moins 1 produit.", "Erreur", JOptionPane.ERROR_MESSAGE);
+		}
+		
+	} 
 
 }
