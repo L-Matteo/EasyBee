@@ -23,4 +23,10 @@ public class Produit {
 	public double getPrix() { return this.prixPdt; }
 	public void setPrix(double prixPdt) { this.prixPdt = prixPdt; }
 	
+	@Override
+	public String toString()
+	{
+		return designationProduit;
+	}
+	
 }
