@@ -8,24 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Commande;
+import model.Produit;
 import utils.ConnexionBdd;
 
 public class CommandeDAO {
 	
 	ConnexionBdd cn = ConnexionBdd.getInstance();
-	
-	public void updateQtePrepa(int qtePrepa, int id) 
-	{
-		String query = "update detailcmd set qtePrepa = ? where idCmdeApproDepot = ?";
-		
-		try (PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
-			stmt.setInt(1, qtePrepa);
-			stmt.setInt(2, id);
-			stmt.executeUpdate();
-		} catch(SQLException e) {
-			e.printStackTrace();
-		}
-	}
 	
 	public void updateQteRecu(int qteRecu, int id)
 	{
@@ -60,21 +48,27 @@ public class CommandeDAO {
 		return cmdes;
 	}
 	
-	public Commande afficherDetailsCmdeSelectione(String cmdeSelectionne) 
+	public ArrayList<Produit> afficherProduitCmdeSelectione(int idCmde) 
 	{
-		String query = "select nomCommande, designationProduit, qteCmde from detailproduit join cmdeapprodepot on idCmdeApproDepot = cmdeapprodepot.id join produit on idProduit = produit.id where nomCommande = ?";
+		ArrayList<Produit> produitsCmde = new ArrayList<>();
+		
+		String query = "select idProduit, codeProduit, designationProduit, qteCmde from detailproduit join produit on idProduit = produit.id "
+				+ "where detailproduit.idCmdeApproDepot = ?";
 		
 		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query)) {
-			stmt.setString(1,cmdeSelectionne);
+			stmt.setInt(1, idCmde);
 			try(ResultSet rs = stmt.executeQuery()){
-				if(rs.next()) {
-					return new Commande(rs.getString("designationProduit"), rs.getInt("qteCmde"), "");
+				while(rs.next()) {
+					Produit unProduit = new Produit(rs.getInt("idProduit"),rs.getInt("codeProduit"), rs.getString("designationProduit"),0,rs.getInt("qteCmde"));
+					produitsCmde.add(unProduit);
 				}
-			} 
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} 
-		return null;
+		return produitsCmde;
 	}
 	 
 	public void changerStatutCommande(String nomCommande, String newStatut) 
