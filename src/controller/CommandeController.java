@@ -44,7 +44,7 @@ public class CommandeController {
 			listView.getComboBox().addItem(commande.getNom());
 		}
 		
-		this.listView.getBtnNext().addActionListener(e -> openDetailsCmde());
+		this.listView.getBtnNext().addActionListener(e -> validerListCmde());
 		this.listView.getBtnRetour().addActionListener(e -> retourAccueilListCmde()); 
 	}
 	
@@ -52,20 +52,18 @@ public class CommandeController {
 	{
 		this.detailsView = view;
 		 
-		Commande commande = daoCmde.afficherDetailsCmdeSelectione(cmdeSelectionne);
+		int idCmde = daoCmde.selectIdCmde(cmdeSelectionne);
+		ArrayList<Produit> produitsCmde = daoCmde.afficherProduitCmdeSelectione(idCmde); 
 		
-		if(commande != null) {
-			detailsView.getNomProduit().setText(commande.getNom());
-			detailsView.getQtnDemande().setText("Quantité demandée : " + String.valueOf(commande.getQte()));
-		} else {
-			JOptionPane.showMessageDialog(detailsView, "Impossible de trouver la commande", "Erreur", JOptionPane.ERROR_MESSAGE);
-			ListeCmde listeCmde = new ListeCmde(user);
-			setListeView(listeCmde); 
-			detailsView.dispose();
-			listeCmde.setVisible(true);
+		for(Produit unProduit: produitsCmde) {
+			detailsView.getModel().addRow(new Object[]{
+					unProduit.getCodeProduit(),
+					unProduit.getDesignationProduit(), 
+					unProduit.getQte()
+			});
 		}
 		
-		this.detailsView.getBtnTerminer().addActionListener(e -> changerStatusDetailsCmde());
+		this.detailsView.getBtnTerminer().addActionListener(e -> ValiderDetailsCmde());
 		this.detailsView.getBtnRetour().addActionListener(e -> retourDetailsCmde());
 		
 	}
@@ -118,13 +116,18 @@ public class CommandeController {
 		this.passerCmde.getBtnValider().addActionListener(e -> validerCmde());
 	}
 	
-	public void openDetailsCmde() 
+	public void validerListCmde() 
 	{
 		this.cmdeSelectionne = (String)listView.getComboBox().getSelectedItem();
-		DetailsCmde cmde = new DetailsCmde(user, cmdeSelectionne); 
-		setDetailsView(cmde);
-		listView.dispose();
-		cmde.setVisible(true);
+		
+		if(!cmdeSelectionne.equals("— Sélectionnez une commande —")) {
+			DetailsCmde cmde = new DetailsCmde(user, cmdeSelectionne); 
+			setDetailsView(cmde);
+			listView.dispose();
+			cmde.setVisible(true);
+		} else {
+			JOptionPane.showMessageDialog(listView, "Veuillez sélectionner une commande", "Erreur", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	  
 	public void retourAccueilListCmde() 
@@ -135,18 +138,9 @@ public class CommandeController {
 		accueil.setVisible(true);
 	}
 	
-	public void changerStatusDetailsCmde() 
+	public void ValiderDetailsCmde()
 	{
-		int id = daoCmde.selectIdCmde(cmdeSelectionne); 
-		
 		if(detailsView.getCheckBox().isSelected()) {
-			try {
-				int qtePrepa = Integer.parseInt(detailsView.getQtnPrepa().getText());
-				daoCmde.updateQtePrepa(qtePrepa,id);
-			} catch(NumberFormatException e1) {
-				JOptionPane.showMessageDialog(detailsView, "La valeur du champ \"Quantité préparée\" n'est pas valable.", "Erreur", JOptionPane.ERROR_MESSAGE);
-				e1.printStackTrace();
-			}
 			daoCmde.changerStatutCommande(cmdeSelectionne, "en cours de livraison");
 			JOptionPane.showMessageDialog(detailsView, "Le statut de la commande a été changé.", "Succès", JOptionPane.INFORMATION_MESSAGE);
 			ListeCmde listeCmde = new ListeCmde(user);
