@@ -22,7 +22,7 @@ public class ProduitDAO {
 		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query)) {
 			try(ResultSet rs = stmt.executeQuery()){
 				while(rs.next()) {
-					Produit unProduit = new Produit(rs.getInt("id"),rs.getInt("codeProduit"),rs.getString("designationProduit"),rs.getDouble("prixPdt")); 
+					Produit unProduit = new Produit(rs.getInt("id"),rs.getInt("codeProduit"),rs.getString("designationProduit"),rs.getDouble("prixPdt"),0); 
 					lesProduits.add(unProduit);
 				}
 			}

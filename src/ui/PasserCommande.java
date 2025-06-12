@@ -63,7 +63,7 @@ public class PasserCommande extends JFrame {
 		comboBoxProduit.setBounds(88, 117, 234, 31);
 		comboBoxProduit.setFont(new Font("Segoe UI", Font.PLAIN, 13));
 		contentPane.add(comboBoxProduit);
-		comboBoxProduit.addItem(new Produit(0,0,"— Sélectionnez un produit —",0));
+		comboBoxProduit.addItem(new Produit(0,0,"— Sélectionnez un produit —",0,0));
 		
 		lblStock = new JLabel("Stock Entrepôt :");
 		lblStock.setBounds(88, 165, 226, 25);
