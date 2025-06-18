@@ -63,12 +63,12 @@ public class CommandeController {
 			});
 		}
 		
-		this.detailsView.getBtnTerminer().addActionListener(e -> ValiderDetailsCmde());
+		this.detailsView.getBtnTerminer().addActionListener(e -> TerminerDetailsCmde());
 		this.detailsView.getBtnRetour().addActionListener(e -> retourDetailsCmde());
 		
 	}
 	
-	public void setSuiviView(PageSuiviCmde view) 
+	public void setSuiviView(PageSuiviCmde view) // faire un sorte que le tableau se remplisse
 	{
 		this.suiviCmde = view;
 		
@@ -78,7 +78,7 @@ public class CommandeController {
 			this.suiviCmde.getComboBox().addItem(uneCommande.getNom());
 		}
 		
-		this.suiviCmde.getBtnTermine().addActionListener(e -> changerStatusSuiviCmde());
+		this.suiviCmde.getBtnTermine().addActionListener(e -> TerminerSuiviCmde());
 		this.suiviCmde.getBtnRetour().addActionListener(e -> retourAccueilSuiviCmde()); 
 	}
 	
@@ -138,7 +138,7 @@ public class CommandeController {
 		accueil.setVisible(true);
 	}
 	
-	public void ValiderDetailsCmde()
+	public void TerminerDetailsCmde()
 	{
 		if(detailsView.getCheckBox().isSelected()) {
 			daoCmde.changerStatutCommande(cmdeSelectionne, "en cours de livraison");
@@ -160,30 +160,17 @@ public class CommandeController {
 		listeCmde.setVisible(true);
 	}
 	
-	public void changerStatusSuiviCmde() 
+	public void TerminerSuiviCmde() // modifier + créer méthode pour le bouton signaler problème
 	{
 		this.cmdeSelectionne = (String) suiviCmde.getComboBox().getSelectedItem();
 		
-		int id = daoCmde.selectIdCmde(cmdeSelectionne);
-		int qteRecu = Integer.parseInt(suiviCmde.getQteReçu().getText());
-		
 		if(!cmdeSelectionne.equals("— Sélectionnez une commande —")) {
-			if(suiviCmde.getCheckBox().isSelected()) {
-				try {
-					daoCmde.updateQteRecu(qteRecu, id);
-				} catch(NumberFormatException e) {
-					JOptionPane.showMessageDialog(suiviCmde,"La valeur du champ \"Quantité reçue\" n'est pas valable.", "Erreur", JOptionPane.ERROR_MESSAGE);
-					e.printStackTrace();
-				}
-				daoCmde.changerStatutCommande(cmdeSelectionne, "livrée");
-				JOptionPane.showMessageDialog(suiviCmde, "Le statut de la commande a été changé", "Succès", JOptionPane.INFORMATION_MESSAGE);
-				PageSuiviCmde pageSuiviCmde = new PageSuiviCmde(user);
-				setSuiviView(pageSuiviCmde); 
-				suiviCmde.dispose();
-				pageSuiviCmde.setVisible(true); 
-			} else {
-				JOptionPane.showMessageDialog(suiviCmde, "La commande est toujours en cours de livraison", "Erreur", JOptionPane.ERROR_MESSAGE);
-			} 
+			daoCmde.changerStatutCommande(cmdeSelectionne, "livrée");
+			JOptionPane.showMessageDialog(suiviCmde, "Le statut de la commande a été changé", "Succès", JOptionPane.INFORMATION_MESSAGE);
+			PageSuiviCmde pageSuiviCmde = new PageSuiviCmde(user);
+			setSuiviView(pageSuiviCmde); 
+			suiviCmde.dispose();
+			pageSuiviCmde.setVisible(true); 
 		} else {
 			JOptionPane.showMessageDialog(suiviCmde, "Erreur dans la sélection de la commande", "Erreur", JOptionPane.ERROR_MESSAGE);
 		}
