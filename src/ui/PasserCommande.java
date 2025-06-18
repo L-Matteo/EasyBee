@@ -111,6 +111,13 @@ public class PasserCommande extends JFrame {
 		model.addColumn("Quantité");
 		
 		table = new JTable(model);
+		table.getColumnModel().getColumn(0).setPreferredWidth(60);  
+		table.getColumnModel().getColumn(1).setPreferredWidth(145); 
+		table.getColumnModel().getColumn(2).setPreferredWidth(60);  
+		table.getColumnModel().getColumn(0).setResizable(false);
+		table.getColumnModel().getColumn(1).setResizable(false);
+		table.getColumnModel().getColumn(2).setResizable(false);
+		table.setRowHeight(21);
 		
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(378, 92, 322, 183);
