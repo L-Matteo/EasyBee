@@ -69,9 +69,9 @@ public class CommandeDAO {
 			e.printStackTrace();
 		} 
 		return produitsCmde;
-	}
+	} 
 	 
-	public void changerStatutCommande(String nomCommande, String newStatut) 
+	public boolean changerStatutCommande(String nomCommande, String newStatut) 
 	{
 		String query = "update cmdeapprodepot set statutCommande = ? where nomCommande = ?";
 		
@@ -79,9 +79,11 @@ public class CommandeDAO {
 			stmt.setString(1, newStatut);
 			stmt.setString(2, nomCommande);
 			stmt.executeUpdate();
+			return true;
 		} catch(SQLException e) {
 			e.printStackTrace();
-		}
+		} 
+		return false;
 	}
 	
 	public int selectIdCmde(String nomCommande) 
@@ -98,7 +100,7 @@ public class CommandeDAO {
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}
-		return 0;
+		return 0; 
 	}
 	 
 	public int addCmdeApproDepot(int idCatSalarie) 
