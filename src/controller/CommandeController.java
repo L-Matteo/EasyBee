@@ -68,7 +68,7 @@ public class CommandeController {
 		
 	}
 	
-	public void setSuiviView(PageSuiviCmde view) // faire un sorte que le tableau se remplisse
+	public void setSuiviView(PageSuiviCmde view)
 	{
 		this.suiviCmde = view;
 		
@@ -78,7 +78,26 @@ public class CommandeController {
 			this.suiviCmde.getComboBox().addItem(uneCommande.getNom());
 		}
 		
+		suiviCmde.getComboBox().addItemListener(e -> { 
+			if(!suiviCmde.getComboBox().getSelectedItem().equals("— Sélectionnez une commande —")) {
+				String cmdeSelectionne = (String) this.suiviCmde.getComboBox().getSelectedItem();
+				int idCmdeSelectionne = daoCmde.selectIdCmde(cmdeSelectionne);
+				ArrayList<Produit> produitsCmde = daoCmde.afficherProduitCmdeSelectione(idCmdeSelectionne);	
+				suiviCmde.getModel().setRowCount(0);
+				for(Produit unProduit: produitsCmde) {
+					suiviCmde.getModel().addRow(new Object[] {
+							unProduit.getCodeProduit(),
+							unProduit.getDesignationProduit(), 
+							unProduit.getQte()
+					});
+				}
+			} else {
+				suiviCmde.getModel().setRowCount(0);
+			}
+		});
+		 
 		this.suiviCmde.getBtnTermine().addActionListener(e -> TerminerSuiviCmde());
+		this.suiviCmde.getBtnProb().addActionListener(e -> signalerProb());
 		this.suiviCmde.getBtnRetour().addActionListener(e -> retourAccueilSuiviCmde()); 
 	}
 	
@@ -160,7 +179,7 @@ public class CommandeController {
 		listeCmde.setVisible(true);
 	}
 	
-	public void TerminerSuiviCmde() // modifier + créer méthode pour le bouton signaler problème
+	public void TerminerSuiviCmde() // modifier 
 	{
 		this.cmdeSelectionne = (String) suiviCmde.getComboBox().getSelectedItem();
 		
@@ -169,12 +188,30 @@ public class CommandeController {
 			JOptionPane.showMessageDialog(suiviCmde, "Le statut de la commande a été changé", "Succès", JOptionPane.INFORMATION_MESSAGE);
 			PageSuiviCmde pageSuiviCmde = new PageSuiviCmde(user);
 			setSuiviView(pageSuiviCmde); 
-			suiviCmde.dispose();
+			this.suiviCmde.dispose();
 			pageSuiviCmde.setVisible(true); 
 		} else {
 			JOptionPane.showMessageDialog(suiviCmde, "Erreur dans la sélection de la commande", "Erreur", JOptionPane.ERROR_MESSAGE);
 		}
 	} 
+	
+	public void signalerProb() // ça ouvre une nouvelle fenetre où l'utilisateur doit décrire le problème et le statut change uniquement après avoir appuyer sur le bouton terminer dans cette fenetre
+	{
+		String cmdeSelectionne = (String) suiviCmde.getComboBox().getSelectedItem();
+		if(!cmdeSelectionne.equals("— Sélectionnez une commande —")) {
+			if(daoCmde.changerStatutCommande(cmdeSelectionne, "Erreur")) {
+				JOptionPane.showMessageDialog(suiviCmde, "L'erreur a été signalée.", "Succès", JOptionPane.INFORMATION_MESSAGE);
+				PageSuiviCmde pageSuivi = new PageSuiviCmde(user);
+				setSuiviView(pageSuivi);
+				suiviCmde.dispose();
+				pageSuivi.setVisible(true);
+			} else {
+				JOptionPane.showMessageDialog(suiviCmde, "Une erreur est survenue.", "Erreur", JOptionPane.ERROR_MESSAGE);
+			}
+		} else {
+			JOptionPane.showMessageDialog(suiviCmde, "Veuillez choisir une commande valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 	
 	public void retourAccueilSuiviCmde() 
 	{
