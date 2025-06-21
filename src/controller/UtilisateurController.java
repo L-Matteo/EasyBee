@@ -17,7 +17,6 @@ public class UtilisateurController {
 		this.dao = dao;
 		
 		this.view.setBtnListener(e -> connexion());
-		
 	}
 	
 	public void connexion() {
