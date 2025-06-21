@@ -16,6 +16,7 @@ import ui.ListeCmde;
 import ui.PageAccueil;
 import ui.PageSuiviCmde;
 import ui.PasserCommande;
+import ui.ReportProblem;
 
 public class CommandeController {
 	
@@ -26,6 +27,7 @@ public class CommandeController {
 	ListeCmde listView; 
 	DetailsCmde detailsView;
 	PageSuiviCmde suiviCmde;
+	ReportProblem reportProblem;
 	PasserCommande passerCmde;
 	
 	public CommandeController(CommandeDAO daoCmde, ProduitDAO daoProduit, Utilisateur user) 
@@ -45,7 +47,12 @@ public class CommandeController {
 		}
 		
 		this.listView.getBtnNext().addActionListener(e -> validerListCmde());
-		this.listView.getBtnRetour().addActionListener(e -> retourAccueilListCmde()); 
+		this.listView.getBtnRetour().addActionListener(e -> {
+			PageAccueil accueil = new PageAccueil(user);
+			new AccueilController(accueil);
+			listView.dispose();
+			accueil.setVisible(true);
+		}); 
 	}
 	
 	public void setDetailsView(DetailsCmde view) 
@@ -64,7 +71,12 @@ public class CommandeController {
 		}
 		
 		this.detailsView.getBtnTerminer().addActionListener(e -> TerminerDetailsCmde());
-		this.detailsView.getBtnRetour().addActionListener(e -> retourDetailsCmde());
+		this.detailsView.getBtnRetour().addActionListener(e -> {
+			ListeCmde listeCmde = new ListeCmde(user);
+			setListeView(listeCmde);
+			detailsView.dispose();
+			listeCmde.setVisible(true);
+		});
 		
 	}
 	
@@ -96,9 +108,40 @@ public class CommandeController {
 			}
 		});
 		 
+		this.suiviCmde.getBtnRetour().addActionListener(e -> {
+			PageAccueil accueil = new PageAccueil(user);
+			new AccueilController(accueil);
+			suiviCmde.dispose();
+			accueil.setVisible(true); 
+		}); 
+		
 		this.suiviCmde.getBtnTermine().addActionListener(e -> TerminerSuiviCmde());
-		this.suiviCmde.getBtnProb().addActionListener(e -> signalerProb());
-		this.suiviCmde.getBtnRetour().addActionListener(e -> retourAccueilSuiviCmde()); 
+		
+		this.suiviCmde.getBtnProb().addActionListener(e -> {
+			String cmdeSelectionne = (String) suiviCmde.getComboBox().getSelectedItem();
+			if(!cmdeSelectionne.equals("— Sélectionnez une commande —")) {
+				ReportProblem reportProblem = new ReportProblem(user, cmdeSelectionne);
+				setReportProblem(reportProblem);
+				suiviCmde.dispose();
+				reportProblem.setVisible(true);
+			} else {
+				JOptionPane.showMessageDialog(suiviCmde, "Veuillez choisir une commande valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
+			}
+		});
+	}
+	
+	public void setReportProblem(ReportProblem view)
+	{
+		this.reportProblem = view;
+		
+		reportProblem.getBtnRetour().addActionListener(e -> {
+			PageSuiviCmde pageSuiviCmde = new PageSuiviCmde(user);
+			setSuiviView(pageSuiviCmde);
+			reportProblem.dispose();
+			pageSuiviCmde.setVisible(true);
+		});
+		
+		reportProblem.getBtnValider().addActionListener(e -> signalerProb());
 	}
 	
 	public void setPasserCommande(PasserCommande view)
@@ -129,9 +172,14 @@ public class CommandeController {
 		    );
 		});
 		
-		this.passerCmde.getBtnRetour().addActionListener(e -> retourAccueilPasserCmde());
+		this.passerCmde.getBtnRetour().addActionListener(e -> {
+			PageAccueil accueil = new PageAccueil(user);
+			new AccueilController(accueil);
+			passerCmde.dispose();
+			accueil.setVisible(true);
+		});
 		this.passerCmde.getBtnAddProduit().addActionListener(e -> addProduitTable());
-		this.passerCmde.getBtnSuprProduit().addActionListener(e -> supProduitTable());
+		this.passerCmde.getBtnSuprProduit().addActionListener(e -> suprProduitTable());
 		this.passerCmde.getBtnValider().addActionListener(e -> validerCmde());
 	}
 	
@@ -148,15 +196,7 @@ public class CommandeController {
 			JOptionPane.showMessageDialog(listView, "Veuillez sélectionner une commande", "Erreur", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	  
-	public void retourAccueilListCmde() 
-	{
-		PageAccueil accueil = new PageAccueil(user);
-		new AccueilController(accueil);
-		listView.dispose();
-		accueil.setVisible(true);
-	}
-	
+	 
 	public void TerminerDetailsCmde()
 	{
 		if(detailsView.getCheckBox().isSelected()) {
@@ -171,63 +211,47 @@ public class CommandeController {
 		}
 	}
 	
-	public void retourDetailsCmde() 
-	{
-		ListeCmde listeCmde = new ListeCmde(user);
-		setListeView(listeCmde);
-		detailsView.dispose();
-		listeCmde.setVisible(true);
-	}
-	
-	public void TerminerSuiviCmde() // modifier 
+	public void TerminerSuiviCmde() 
 	{
 		this.cmdeSelectionne = (String) suiviCmde.getComboBox().getSelectedItem();
 		
 		if(!cmdeSelectionne.equals("— Sélectionnez une commande —")) {
-			daoCmde.changerStatutCommande(cmdeSelectionne, "livrée");
-			JOptionPane.showMessageDialog(suiviCmde, "Le statut de la commande a été changé", "Succès", JOptionPane.INFORMATION_MESSAGE);
-			PageSuiviCmde pageSuiviCmde = new PageSuiviCmde(user);
-			setSuiviView(pageSuiviCmde); 
-			this.suiviCmde.dispose();
-			pageSuiviCmde.setVisible(true); 
-		} else {
-			JOptionPane.showMessageDialog(suiviCmde, "Erreur dans la sélection de la commande", "Erreur", JOptionPane.ERROR_MESSAGE);
-		}
-	} 
-	
-	public void signalerProb() // ça ouvre une nouvelle fenetre où l'utilisateur doit décrire le problème et le statut change uniquement après avoir appuyer sur le bouton terminer dans cette fenetre
-	{
-		String cmdeSelectionne = (String) suiviCmde.getComboBox().getSelectedItem();
-		if(!cmdeSelectionne.equals("— Sélectionnez une commande —")) {
-			if(daoCmde.changerStatutCommande(cmdeSelectionne, "Erreur")) {
-				JOptionPane.showMessageDialog(suiviCmde, "L'erreur a été signalée.", "Succès", JOptionPane.INFORMATION_MESSAGE);
-				PageSuiviCmde pageSuivi = new PageSuiviCmde(user);
-				setSuiviView(pageSuivi);
+			if(daoCmde.changerStatutCommande(cmdeSelectionne, "livrée")) {
+				JOptionPane.showMessageDialog(suiviCmde, "Le statut de la commande a été changé.", "Succès", JOptionPane.INFORMATION_MESSAGE);
+				PageSuiviCmde pageSuiviCmde = new PageSuiviCmde(user);
+				setSuiviView(pageSuiviCmde); 
 				suiviCmde.dispose();
-				pageSuivi.setVisible(true);
+				pageSuiviCmde.setVisible(true); 
 			} else {
 				JOptionPane.showMessageDialog(suiviCmde, "Une erreur est survenue.", "Erreur", JOptionPane.ERROR_MESSAGE);
 			}
 		} else {
 			JOptionPane.showMessageDialog(suiviCmde, "Veuillez choisir une commande valide.", "Erreur", JOptionPane.ERROR_MESSAGE);
 		}
-	}
+	} 
 	
-	public void retourAccueilSuiviCmde() 
+	public void signalerProb() 
 	{
-		PageAccueil accueil = new PageAccueil(user);
-		new AccueilController(accueil);
-		suiviCmde.dispose();
-		accueil.setVisible(true); 
-	}
-	
-	public void retourAccueilPasserCmde()
-	{
-		PageAccueil accueil = new PageAccueil(user);
-		new AccueilController(accueil);
-		passerCmde.dispose();
-		accueil.setVisible(true);
-	}
+		String descriptionProblem = reportProblem.getDescription().getText();
+		
+		if(!descriptionProblem.isEmpty()) {
+			if(daoCmde.addDescriptionProblem(descriptionProblem, reportProblem.getCmdeSelectionne())) {
+				if(daoCmde.changerStatutCommande(reportProblem.getCmdeSelectionne(), "Erreur")) {
+					JOptionPane.showMessageDialog(reportProblem, "L'erreur a été signalée.", "Succès", JOptionPane.INFORMATION_MESSAGE);
+					PageSuiviCmde pageSuiviCmde = new PageSuiviCmde(user);
+					setSuiviView(pageSuiviCmde);
+					reportProblem.dispose();
+					pageSuiviCmde.setVisible(true);
+				} else {
+					JOptionPane.showMessageDialog(reportProblem, "Une erreur est survenue.", "Erreur", JOptionPane.ERROR_MESSAGE);
+				}
+			} else {
+				JOptionPane.showMessageDialog(reportProblem, "Une erreur est survenue.", "Erreur", JOptionPane.ERROR_MESSAGE);
+			}
+		} else {
+			JOptionPane.showMessageDialog(reportProblem, "Veuillez décrire l'erreur.", "Erreur", JOptionPane.ERROR_MESSAGE);
+		}
+	} 
 	
 	public void addProduitTable()
 	{
@@ -257,7 +281,7 @@ public class CommandeController {
 		}
 	}
 	
-	public void supProduitTable()
+	public void suprProduitTable()
 	{
 		int selectedRow = passerCmde.getTable().getSelectedRow();
 	    if (selectedRow != -1) {
