@@ -147,4 +147,19 @@ public class CommandeDAO {
 		return false;
 	}
 	
+	public boolean addDescriptionProblem(String descriptionErreur, String nomCmde)
+	{
+		String query = "update cmdeapprodepot set descriptionErreur = ? where nomCommande = ?";
+		
+		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
+			stmt.setString(1, descriptionErreur);
+			stmt.setString(2, nomCmde);
+			stmt.executeUpdate();
+			return true;
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 } 
