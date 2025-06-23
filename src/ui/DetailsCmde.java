@@ -30,7 +30,7 @@ public class DetailsCmde extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(570, 250, 700, 420);
-		setTitle("Détails de la commande en attente - Gestion des stocks");
+		setTitle("Détails de la commande en attente | Gestion des stocks");
 		setResizable(false);
 		
 		contentPane = new JPanel();
