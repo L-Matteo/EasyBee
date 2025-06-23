@@ -13,6 +13,7 @@ import model.Produit;
 import model.Utilisateur;
 import ui.DetailsCmde;
 import ui.ListeCmde;
+import ui.ListeErreur;
 import ui.PageAccueil;
 import ui.PageSuiviCmde;
 import ui.PasserCommande;
@@ -29,6 +30,7 @@ public class CommandeController {
 	PageSuiviCmde suiviCmde;
 	ReportProblem reportProblem;
 	PasserCommande passerCmde;
+	ListeErreur listeErreur;
 	
 	public CommandeController(CommandeDAO daoCmde, ProduitDAO daoProduit, Utilisateur user) 
 	{
@@ -181,6 +183,18 @@ public class CommandeController {
 		this.passerCmde.getBtnAddProduit().addActionListener(e -> addProduitTable());
 		this.passerCmde.getBtnSuprProduit().addActionListener(e -> suprProduitTable());
 		this.passerCmde.getBtnValider().addActionListener(e -> validerCmde());
+	} 
+	
+	public void setListeErreurView(ListeErreur view)
+	{
+		this.listeErreur = view;
+		
+		this.listeErreur.getBtnRetour().addActionListener(e -> {
+			PageAccueil accueil = new PageAccueil(user);
+			new AccueilController(accueil);
+			this.listeErreur.dispose();
+			accueil.setVisible(true);
+		});
 	}
 	
 	public void validerListCmde() 
