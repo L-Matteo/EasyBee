@@ -21,6 +21,7 @@ public class PageAccueil extends JFrame {
 	private JButton btnSuiviCmde;
 	private JButton btnPrepa;
 	private JButton btnDeco; 
+	private JButton btnListeErreur;
 	private Utilisateur user;
 
 	public PageAccueil(Utilisateur user) {
@@ -81,6 +82,14 @@ public class PageAccueil extends JFrame {
 		btnPrepa.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 		contentPane.add(btnPrepa);
 		
+		btnListeErreur = new JButton("Liste des erreurs");
+		btnListeErreur.setBackground(new Color(100, 150, 255));
+		btnListeErreur.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		btnListeErreur.setForeground(Color.WHITE);
+		btnListeErreur.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+		btnListeErreur.setBounds(406, 227, 196, 37);
+		contentPane.add(btnListeErreur);
+		
 		btnDeco = new JButton("Déconnexion");
 		btnDeco.setBackground(new Color(220, 80, 80));
 		btnDeco.setForeground(Color.WHITE);
@@ -95,6 +104,6 @@ public class PageAccueil extends JFrame {
 	public JButton getBtnCommande() { return btnCommande; }
 	public JButton getBtnSuiviCmde() { return btnSuiviCmde; }
 	public JButton getBtnPrepa() { return btnPrepa; }
+	public JButton getBtnListeErreur() { return this.btnListeErreur; }
 	public JButton getBtnDeco() { return btnDeco; } 
-
 }
