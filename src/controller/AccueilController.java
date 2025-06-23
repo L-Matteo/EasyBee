@@ -7,6 +7,7 @@ import dao.ProduitDAO;
 import dao.UtilisateurDAO;
 import model.Utilisateur;
 import ui.ListeCmde;
+import ui.ListeErreur;
 import ui.PageAccueil;
 import ui.PageConnexion;
 import ui.PageSuiviCmde;
@@ -22,6 +23,7 @@ public class AccueilController {
 		this.view.getBtnCommande().addActionListener(e -> openPasserCommande());
 		this.view.getBtnSuiviCmde().addActionListener(e -> openSuiviCmde()); 
 		this.view.getBtnPrepa().addActionListener(e -> openListeCmde());
+		this.view.getBtnListeErreur().addActionListener(e -> openListeErreur());
 		this.view.getBtnDeco().addActionListener(e -> seDeconnecter());
 	}
 	
@@ -37,7 +39,7 @@ public class AccueilController {
 			suiviCmde.setVisible(true);
 		} else {
 			JOptionPane.showMessageDialog(view,"Vous n'avez pas le rôle nécessaire pour accéder à cette fonctionnalité",
-					"ERREUR", JOptionPane.ERROR_MESSAGE); 
+					"Erreur", JOptionPane.ERROR_MESSAGE); 
 		}
 	}
 	
@@ -53,7 +55,7 @@ public class AccueilController {
 			listeCommande.setVisible(true); 
 		} else {
 			JOptionPane.showMessageDialog(view,"Vous n'avez pas le rôle nécessaire pour accéder à cette fonctionnalité",
-					"ERREUR", JOptionPane.ERROR_MESSAGE); 
+					"Erreur", JOptionPane.ERROR_MESSAGE); 
 		}
 	}
 	
@@ -70,7 +72,24 @@ public class AccueilController {
 			view.dispose();
 			passerCommande.setVisible(true);
 		} else {
-			JOptionPane.showMessageDialog(view,"Vous n'avez pas le rôle nécessaire pour accéder à cette fonctionnalité","ERREUR", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(view,"Vous n'avez pas le rôle nécessaire pour accéder à cette fonctionnalité","Erreur", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	public void openListeErreur()
+	{
+		Utilisateur user = view.getUser();
+		
+		if(user.getRole() == 2) {
+			ListeErreur listeErreur = new ListeErreur(user);
+			CommandeDAO daoCmde = new CommandeDAO();
+			ProduitDAO daoProduit = new ProduitDAO();
+			CommandeController cmdeController = new CommandeController(daoCmde, daoProduit, user);
+			cmdeController.setListeErreurView(listeErreur);
+			view.dispose();
+			listeErreur.setVisible(true);
+		} else {
+			JOptionPane.showMessageDialog(view,"Vous n'avez pas le rôle nécessaire pour accéder à cette fonctionnalité","Erreur", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	
