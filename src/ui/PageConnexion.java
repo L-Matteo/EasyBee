@@ -26,7 +26,7 @@ public class PageConnexion extends JFrame {
 	public PageConnexion() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(570, 250, 660, 420);
+		setBounds(440, 250, 1060, 620);
 		setTitle("Connexion - Gestion des stocks");
 		setResizable(false);
 		
@@ -38,28 +38,30 @@ public class PageConnexion extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblTitle = new JLabel("Connexion à la plateforme de gestion");
-		lblTitle.setBounds(160, 33, 347, 30);
-		lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		lblTitle.setBounds(290, 40, 469, 35);
+		lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
 		lblTitle.setForeground(new Color(50, 50, 100));
 		contentPane.add(lblTitle);
 		
 		JLabel lblLogin = new JLabel("Identifiant :");
-		lblLogin.setFont(new Font("Segoe UI", Font.BOLD, 14));
-		lblLogin.setBounds(214, 95, 117, 20);
+		lblLogin.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		lblLogin.setBounds(360, 125, 117, 25);
 		contentPane.add(lblLogin);
 		
 		textFieldLogin = new JTextField();
-		textFieldLogin.setBounds(214, 125, 218, 25);
+		textFieldLogin.setBounds(360, 160, 318, 35);
+		textFieldLogin.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		contentPane.add(textFieldLogin);
 		textFieldLogin.setColumns(10);
 		
 		JLabel lblPassword = new JLabel("Mot de passe : ");
-		lblPassword.setFont(new Font("Segoe UI", Font.BOLD, 14));
-		lblPassword.setBounds(214, 166, 134, 13);
+		lblPassword.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		lblPassword.setBounds(360, 230, 150, 25);
 		contentPane.add(lblPassword);
 		
 		passwordField = new JPasswordField();
-		passwordField.setBounds(214, 189, 218, 25);
+		passwordField.setBounds(360, 265, 318, 35);
+		passwordField.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		contentPane.add(passwordField);
 		
 		JCheckBox showPassword = new JCheckBox("Afficher le mot de passe");
@@ -70,16 +72,16 @@ public class PageConnexion extends JFrame {
 				passwordField.setEchoChar('\u2022'); // Rétablit les bullets ●●●
 			}
 		});
-		showPassword.setBounds(214, 228, 218, 21);
-		showPassword.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+		showPassword.setBounds(360, 340, 250, 21);
+		showPassword.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		showPassword.setBackground(new Color(240, 245, 255));
 		contentPane.add(showPassword);
 		
 		btnConnexion = new JButton("Se connecter");
-		btnConnexion.setBounds(214, 278, 218, 47);
+		btnConnexion.setBounds(360, 410, 318, 65);
 		btnConnexion.setBackground(new Color(100, 150, 255));
 		btnConnexion.setForeground(Color.WHITE);
-		btnConnexion.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		btnConnexion.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnConnexion.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 		contentPane.add(btnConnexion);
 		
