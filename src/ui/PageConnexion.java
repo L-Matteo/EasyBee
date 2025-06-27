@@ -27,7 +27,7 @@ public class PageConnexion extends JFrame {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(440, 250, 1060, 620);
-		setTitle("Connexion - Gestion des stocks");
+		setTitle("Connexion | Gestion des stocks");
 		setResizable(false);
 		
 		contentPane = new JPanel();
