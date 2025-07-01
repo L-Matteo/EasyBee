@@ -4,21 +4,20 @@ public class Commande {
 
 	private int id;
 	private String nom;
-	private int qte;
 	private String statut;
+	private String descriptionErreur;
 	
 		
-	public Commande(String nom, int qte, String statut) {
+	public Commande(String nom, String statut, String descriptionErreur) {
 		this.nom = nom;
-		this.qte = qte;
 		this.statut = statut;
+		this.descriptionErreur = descriptionErreur;
 	}
 		
 	public int getId() { return this.id; }
 	public String getNom() { return this.nom; }
 	public void setNom(String nom) { this.nom = nom; }
-	public int getQte() { return this.qte; }
-	public void setQte(int qte) { this.qte = qte; }
 	public String getStatut() { return this.statut; }
 	public void setStatut(String statut) { this.statut = statut; }
+	public String getErreur() { return this.descriptionErreur; }
 }
