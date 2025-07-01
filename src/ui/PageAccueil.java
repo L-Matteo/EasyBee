@@ -29,7 +29,7 @@ public class PageAccueil extends JFrame {
 		this.user = user; 
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(570, 250, 700, 420);
+		setBounds(440, 250, 1060, 620);
 		setTitle("Accueil | Gestion des stocks");
 		setResizable(false);
 		
@@ -41,42 +41,42 @@ public class PageAccueil extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblUser = new JLabel("Bienvenue " + user.getLogin() + " !");
-		lblUser.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		lblUser.setFont(new Font("Segoe UI", Font.BOLD, 26));
 		lblUser.setForeground(new Color(50, 50, 100));
-		lblUser.setBounds(223, 39, 347, 30);
+		lblUser.setBounds(350, 55, 469, 35);
 		contentPane.add(lblUser);
 		
 		JLabel lblVendeurs = new JLabel("Espace Vendeur");
-		lblVendeurs.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblVendeurs.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		lblVendeurs.setForeground(Color.DARK_GRAY);
-		lblVendeurs.setBounds(76, 120, 131, 21);
+		lblVendeurs.setBounds(120, 170, 150, 25);
 		contentPane.add(lblVendeurs);
 		
 		JLabel lblPreparateurs = new JLabel("Espace Préparateur");
-		lblPreparateurs.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		lblPreparateurs.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		lblPreparateurs.setForeground(Color.DARK_GRAY);
-		lblPreparateurs.setBounds(406, 120, 183, 21);
+		lblPreparateurs.setBounds(630, 170, 175, 25);
 		contentPane.add(lblPreparateurs);
 		
-		btnCommande = new JButton("Passer Commande d'approvisionnement");
-		btnCommande.setBounds(76, 164, 291, 37);
-		btnCommande.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		btnCommande = new JButton("Passer commande d'approvisionnement");
+		btnCommande.setBounds(120, 240, 430, 50);
+		btnCommande.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnCommande.setBackground(new Color(100, 150, 255));
 		btnCommande.setForeground(Color.WHITE);
 		btnCommande.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 		contentPane.add(btnCommande);
 		 
 		btnSuiviCmde = new JButton("Suivi des commandes");
-		btnSuiviCmde.setBounds(76, 227, 291, 37);
-		btnSuiviCmde.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		btnSuiviCmde.setBounds(120, 320, 430, 50);
+		btnSuiviCmde.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnSuiviCmde.setBackground(new Color(100, 150, 255));
 		btnSuiviCmde.setForeground(Color.WHITE);
 		btnSuiviCmde.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
 		contentPane.add(btnSuiviCmde);
 		
 		btnPrepa = new JButton("Liste des commandes");
-		btnPrepa.setBounds(406, 164, 196, 37);
-		btnPrepa.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		btnPrepa.setBounds(630, 240, 285, 50);
+		btnPrepa.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnPrepa.setBackground(new Color(100, 150, 255));
 		btnPrepa.setForeground(Color.WHITE);
 		btnPrepa.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
@@ -84,18 +84,18 @@ public class PageAccueil extends JFrame {
 		
 		btnListeErreur = new JButton("Liste des erreurs");
 		btnListeErreur.setBackground(new Color(100, 150, 255));
-		btnListeErreur.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		btnListeErreur.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnListeErreur.setForeground(Color.WHITE);
 		btnListeErreur.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-		btnListeErreur.setBounds(406, 227, 196, 37);
+		btnListeErreur.setBounds(630, 320, 285, 50);
 		contentPane.add(btnListeErreur);
 		
 		btnDeco = new JButton("Déconnexion");
 		btnDeco.setBackground(new Color(220, 80, 80));
 		btnDeco.setForeground(Color.WHITE);
-		btnDeco.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		btnDeco.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnDeco.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-		btnDeco.setBounds(10, 322, 120, 37);
+		btnDeco.setBounds(20, 500, 180, 50);
 		contentPane.add(btnDeco);
 		
 	}
