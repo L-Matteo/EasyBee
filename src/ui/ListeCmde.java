@@ -24,8 +24,8 @@ public class ListeCmde extends JFrame {
 	public ListeCmde(Utilisateur user) {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(570, 250, 700, 420);
-		setTitle("Liste des commandes en attente | Gestion des stocks");
+		setBounds(440, 250, 1060, 620);
+		setTitle("Liste des commandes en attentes | Gestion des stocks");
 		setResizable(false);
 		
 		contentPane = new JPanel();
@@ -36,35 +36,35 @@ public class ListeCmde extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblTitle = new JLabel("Sélectionner une commande à préparer");
-		lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
 		lblTitle.setForeground(new Color(50, 50, 100));
-		lblTitle.setBounds(181, 36, 347, 31);
+		lblTitle.setBounds(285, 35, 560, 45);
 		contentPane.add(lblTitle);
 		
-		JLabel lblSelectCmd = new JLabel("Commandes en attente :");
-		lblSelectCmd.setBounds(270, 91, 196, 13);
-		lblSelectCmd.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		JLabel lblSelectCmd = new JLabel("Commandes en attentes :");
+		lblSelectCmd.setBounds(407, 145, 230, 18);
+		lblSelectCmd.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		contentPane.add(lblSelectCmd);
 		
 		comboBoxListCmde = new JComboBox<>();
-		comboBoxListCmde.setBounds(196, 131, 300, 31);
-		comboBoxListCmde.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+		comboBoxListCmde.setBounds(360, 215, 310, 31);
+		comboBoxListCmde.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		contentPane.add(comboBoxListCmde);
 		comboBoxListCmde.addItem("— Sélectionnez une commande —");
 		
 		btnNext = new JButton("Suivant");
 		btnNext.setBackground(new Color(46, 204, 113));
 		btnNext.setForeground(Color.WHITE);
-		btnNext.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnNext.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnNext.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-		btnNext.setBounds(284, 191, 120, 37);
+		btnNext.setBounds(360, 300, 310, 50);
 		contentPane.add(btnNext);
 		
 		btnRetour = new JButton("Retour");
-		btnRetour.setBounds(10, 322, 120, 37);
+		btnRetour.setBounds(20, 500, 180, 50);
 		btnRetour.setBackground(new Color(52, 152, 219));
 		btnRetour.setForeground(Color.WHITE);
-		btnRetour.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnRetour.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnRetour.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 		contentPane.add(btnRetour);
 
