@@ -30,7 +30,7 @@ public class PageSuiviCmde extends JFrame {
 	public PageSuiviCmde(Utilisateur user) {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(570, 250, 800, 420);
+		setBounds(440, 250, 1060, 620);
 		setTitle("Suivi des commandes | Gestion des stocks");
 		setResizable(false);
 		
@@ -42,44 +42,44 @@ public class PageSuiviCmde extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblTitle = new JLabel("Suivi des commandes en cours de livraison");
-		lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
 		lblTitle.setForeground(new Color(50, 50, 100));
-		lblTitle.setBounds(200, 34, 418, 22);
+		lblTitle.setBounds(285, 35, 560, 45);
 		contentPane.add(lblTitle);
 		
 		JLabel lblSelectCmd = new JLabel("Commandes en cours de livraison :");
-		lblSelectCmd.setBounds(55, 110, 276, 13);
-		lblSelectCmd.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+		lblSelectCmd.setBounds(85, 180, 350, 18);
+		lblSelectCmd.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		contentPane.add(lblSelectCmd);
 		
 		comboBox = new JComboBox<>();
-		comboBox.setBounds(55, 150, 298, 31);
-		comboBox.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+		comboBox.setBounds(85, 240, 437, 31);
+		comboBox.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		contentPane.add(comboBox);
 		comboBox.addItem("— Sélectionnez une commande —");
 		
 		btnTermine = new JButton("Tout est ok");
 		btnTermine.setBackground(new Color(46, 204, 113));
 		btnTermine.setForeground(Color.WHITE);
-		btnTermine.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnTermine.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnTermine.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-		btnTermine.setBounds(55, 223, 120, 37);
+		btnTermine.setBounds(85, 310, 170, 50);
 		contentPane.add(btnTermine);
 		
 		btnRetour = new JButton("Retour");
-		btnRetour.setBounds(10, 322, 120, 37);
+		btnRetour.setBounds(20, 500, 180, 50);
 		btnRetour.setBackground(new Color(52, 152, 219));
 		btnRetour.setForeground(Color.WHITE);
-		btnRetour.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnRetour.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnRetour.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 		contentPane.add(btnRetour);
 		
 		btnProb = new JButton("Signaler un problème");
 		btnProb.setBackground(new Color(220, 80, 80));
 		btnProb.setForeground(Color.WHITE);
-		btnProb.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnProb.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnProb.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-		btnProb.setBounds(185, 223, 168, 37);
+		btnProb.setBounds(275, 310, 250, 50);
 		contentPane.add(btnProb);
 		
 		model = new DefaultTableModel();
@@ -88,16 +88,17 @@ public class PageSuiviCmde extends JFrame {
 		model.addColumn("Quantité commandée");
 		
 		JTable table = new JTable(model);
-		table.getColumnModel().getColumn(0).setPreferredWidth(60);  
-		table.getColumnModel().getColumn(1).setPreferredWidth(145); 
-		table.getColumnModel().getColumn(2).setPreferredWidth(120);
+		table.getColumnModel().getColumn(0).setPreferredWidth(40);  
+		table.getColumnModel().getColumn(1).setPreferredWidth(185); 
+		table.getColumnModel().getColumn(2).setPreferredWidth(100);
 		table.getColumnModel().getColumn(0).setResizable(false);
 		table.getColumnModel().getColumn(1).setResizable(false);
 		table.getColumnModel().getColumn(2).setResizable(false);
-		table.setRowHeight(21);
+		table.setRowHeight(31);
+		table.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(394, 98, 364, 183);
+		scrollPane.setBounds(570, 140, 430, 250);
 		contentPane.add(scrollPane);
 		
 	}
