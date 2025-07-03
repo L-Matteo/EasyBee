@@ -38,7 +38,7 @@ public class CommandeDAO {
 			stmt.setString(1, "%" + statut + "%");
 			try (ResultSet rs = stmt.executeQuery()){
 				while(rs.next()) {
-					Commande uneCmde = new Commande(rs.getString("nomCommande"),0 ,rs.getString("statutCommande"));
+					Commande uneCmde = new Commande(rs.getString("nomCommande"),rs.getString("statutCommande"), "");
 					cmdes.add(uneCmde);
 				}
 			}
@@ -162,4 +162,38 @@ public class CommandeDAO {
 		return false;
 	}
 	
-} 
+	public ArrayList<Commande> getCommandeErreurs()
+	{
+		ArrayList<Commande> lesCommandes = new ArrayList<>();
+		
+		String query = "select nomCommande, statutCommande, descriptionErreur from cmdeapprodepot where statutCommande = 'Erreur'";
+		
+		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
+			try(ResultSet rs = stmt.executeQuery()){
+				while(rs.next()) {
+					lesCommandes.add(new Commande(rs.getString("nomCommande"), rs.getString("statutCommande"), rs.getString("descriptionErreur")));
+				}
+			} catch(SQLException e) {
+				e.printStackTrace();
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return lesCommandes;
+	}
+	 
+	public boolean removeDescriptionProblem(String nomCmde)
+	{
+		String query = "update cmdeapprodepot set descriptionErreur = '' where nomCommande = ?";
+		
+		try(PreparedStatement stmt = cn.laconnexion().prepareStatement(query)){
+			stmt.setString(1,nomCmde);
+			stmt.executeUpdate();
+			return true;
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return false;
+	}
+	 
+}  
