@@ -9,13 +9,12 @@ EasyBee est une entreprise fictive spécialisée dans la vente de matériel apic
 ## ⚙️Fonctionnalités 
  **Magasin** :  
   - Passer une commande pour un produit en rupture de stock.
-  - Confirmer que la commande reçue est correcte.
-  - Voir l'état d'une commande (En attente, En cours, Terminée).
+  - Signaler un problème en cas d'erreur dans une commande reçue.
 
 **Entrepôt** : 
- - Voir la liste des commandes en attente.
+ - Voir la liste des commandes en attentes.
  - Afficher les détails d'une commande pour la préparer.
- - Changer l'état d'une commande (En attente, En cours, Terminée). 
+ - Voir la liste des commandes en erreurs et les détails de l'erreur. 
 
 
 ## 📋Prérequis
