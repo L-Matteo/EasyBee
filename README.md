@@ -26,8 +26,9 @@ EasyBee est une entreprise fictive spécialisée dans la vente de matériel apic
 
 ## 🚀Installation  
 #### Base de données :
- 1. Importez le fichier  *bdd.sql* dans votre serveur de base de données pour créer la structure de la base.   
- 2. Importez le fichier *data.sql* pour y ajouter les données de test.  
+ 1. Créez une base de données nommée *easybee_java*.
+ 2. Importez le fichier  *bdd.sql* dans votre serveur de base de données pour créer la structure de la base.
+ 3. Importez le fichier *data.sql* pour y ajouter les données de test.  
 #### Application :  
  1. Clonez ou téléchargez ce dépôt.
  2. Importez le code source dans votre IDE préféré :
