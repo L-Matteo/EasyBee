@@ -37,7 +37,7 @@ EasyBee est une entreprise fictive spécialisée dans la vente de matériel apic
 #### Lancement :
  1. Ouvrez le fichier *App.java*.
  2. Exécutez le code pour lancer l'application.
- 3. Connectez-vous avec les identifiants présents dans les données de test. 
+ 3. Connectez-vous avec les identifiants présents dans la base de données. 
 
 
 
