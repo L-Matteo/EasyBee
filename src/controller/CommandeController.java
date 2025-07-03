@@ -185,9 +185,17 @@ public class CommandeController {
 		this.passerCmde.getBtnValider().addActionListener(e -> validerCmde());
 	} 
 	
-	public void setListeErreurView(ListeErreur view)
+	public void setListeErreurView(ListeErreur view) 
 	{
 		this.listeErreur = view;
+		
+		ArrayList<Commande> lesCommandes = daoCmde.getCommandeErreurs();
+		for(Commande uneCommande: lesCommandes) {
+			listeErreur.getModel().addRow(new Object[] {
+					uneCommande.getNom(),
+					uneCommande.getErreur()
+			});
+		}
 		
 		this.listeErreur.getBtnRetour().addActionListener(e -> {
 			PageAccueil accueil = new PageAccueil(user);
@@ -195,6 +203,8 @@ public class CommandeController {
 			this.listeErreur.dispose();
 			accueil.setVisible(true);
 		});
+		
+		this.listeErreur.getBtnSprError().addActionListener(e -> resolveOrderError());
 	}
 	
 	public void validerListCmde() 
@@ -315,9 +325,7 @@ public class CommandeController {
 			
 			if(idCmde != 0) {
 				
-				int rowCount = passerCmde.getModel().getRowCount();
-				
-				for(int i = 0; i < rowCount; i++) {
+				for(int i = 0; i < countRow; i++) {
 					try {
 						int codeProduit = (int) passerCmde.getTable().getValueAt(i, 0);
 						int idProduit = daoProduit.selectIdProduit(codeProduit);
@@ -341,5 +349,27 @@ public class CommandeController {
 		}
 		
 	} 
+	
+	public void resolveOrderError() 
+	{
+		int selectedRow = listeErreur.getTable().getSelectedRow();
+		if(selectedRow != -1) {
+			int choix = JOptionPane.showConfirmDialog(listeErreur,"Voulez-vous livrer à nouveau la commande ?", "Choix", JOptionPane.INFORMATION_MESSAGE);
+			if (choix == JOptionPane.YES_OPTION) {
+				String nomCmde = (String) listeErreur.getTable().getValueAt(selectedRow, 0);
+				if(daoCmde.removeDescriptionProblem(nomCmde)) {
+					if(daoCmde.changerStatutCommande(nomCmde, "en cours de livraison")) {
+						listeErreur.getModel().removeRow(selectedRow);
+					} else {
+						JOptionPane.showMessageDialog(listeErreur, "Une erreur est survenue.", "Erreur", JOptionPane.ERROR_MESSAGE);
+					}
+				} else {
+					JOptionPane.showMessageDialog(listeErreur, "Une erreur est survenue.", "Erreur", JOptionPane.ERROR_MESSAGE);
+				}  
+			} 
+		} else {
+			JOptionPane.showMessageDialog(listeErreur, "Aucune commande a été sélectionnée.", "Erreur", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 
 }
