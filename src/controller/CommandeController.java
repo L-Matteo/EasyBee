@@ -242,9 +242,9 @@ public class CommandeController {
 		if(!cmdeSelectionne.equals("— Sélectionnez une commande —")) {
 			if(daoCmde.changerStatutCommande(cmdeSelectionne, "livrée")) {
 				JOptionPane.showMessageDialog(suiviCmde, "Le statut de la commande a été changé.", "Succès", JOptionPane.INFORMATION_MESSAGE);
+				suiviCmde.dispose();
 				PageSuiviCmde pageSuiviCmde = new PageSuiviCmde(user);
 				setSuiviView(pageSuiviCmde); 
-				suiviCmde.dispose();
 				pageSuiviCmde.setVisible(true); 
 			} else {
 				JOptionPane.showMessageDialog(suiviCmde, "Une erreur est survenue.", "Erreur", JOptionPane.ERROR_MESSAGE);
