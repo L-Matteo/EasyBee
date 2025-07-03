@@ -31,7 +31,7 @@ public class ReportProblem extends JFrame {
 		this.cmdeSelectionne = cmdeSelectionne;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(570, 250, 700, 420);
+		setBounds(440, 250, 1060, 620);
 		setTitle("Signaler une erreur | Gestion des stocks");
 		setResizable(false);
 		
@@ -43,35 +43,35 @@ public class ReportProblem extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblTitle = new JLabel("Signaler une erreur dans la commande");
-		lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 26));
 		lblTitle.setForeground(new Color(50, 50, 100));
-		lblTitle.setBounds(172, 27, 351, 36);
+		lblTitle.setBounds(290, 37, 500, 36);
 		contentPane.add(lblTitle);
 		
 		JLabel lblDescription = new JLabel("Description de l'erreur : ");
-		lblDescription.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		lblDescription.setBounds(172, 93, 164, 13);
+		lblDescription.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+		lblDescription.setBounds(310, 130, 250, 18);
 		contentPane.add(lblDescription);
 		
 		description = new JTextArea();
-		description.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-		description.setBounds(172, 116, 324, 154);
+		description.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+		description.setBounds(310, 175, 420, 180);
 		contentPane.add(description); 
 		
 		btnRetour = new JButton("Retour");
 		btnRetour.setBackground(new Color(52, 152, 219));
 		btnRetour.setForeground(Color.WHITE);
-		btnRetour.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnRetour.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnRetour.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-		btnRetour.setBounds(189, 309, 113, 37);
+		btnRetour.setBounds(20, 500, 180, 50);
 		contentPane.add(btnRetour);
 		
 		btnValider = new JButton("Valider");
 		btnValider.setBackground(new Color(46, 204, 113));
 		btnValider.setForeground(Color.WHITE);
-		btnValider.setFont(new Font("Segoe UI", Font.BOLD, 13));
+		btnValider.setFont(new Font("Segoe UI", Font.BOLD, 20));
 		btnValider.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
-		btnValider.setBounds(322, 309, 144, 37);
+		btnValider.setBounds(310, 390, 420, 50);
 		contentPane.add(btnValider);
 
 	}
